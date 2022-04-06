@@ -7,6 +7,7 @@ const html = fs.readFileSync('html/index.html').toString();
 
 if (fs.existsSync('build'))
     fs.rmSync('build', {recursive: true, force: true});
+fs.mkdirSync('build');
 
 posthtml()
     .use(minifyClassnames({
