@@ -11,7 +11,16 @@ const path = require('path');
 const app = express();
 
 // The opensheetmusicdisplay script
-app.use('/node_modules/opensheetmusicdisplay/build', express.static(path.join(__dirname, 'node_modules/opensheetmusicdisplay/build')));
+app.use(
+    '/node_modules/opensheetmusicdisplay/build',
+    express.static(path.join(__dirname, 'node_modules/opensheetmusicdisplay/build'))
+);
+
+// The Bulma framework
+app.use(
+    '/node_modules/bulma/css',
+    express.static(path.join(__dirname, 'node_modules/bulma/css'))
+);
 
 // Serve the html files
 app.use(express.static('html'))
