@@ -1,6 +1,6 @@
 /**
  * Adds all the required functions for controlling the modals.
- * Annotate any clickable element with the "tm" classname and add the "data-target" attribute with the id of the modal
+ * Annotate any clickable element with the "mt" classname and add the "data-target" attribute with the id of the modal
  * to open.
  * @author Arnau Mora
  * @since 20220407
