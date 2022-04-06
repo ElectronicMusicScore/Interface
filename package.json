@@ -1,0 +1,28 @@
+{
+  "name": "electronicmusicscore-interface",
+  "version": "0.0.1",
+  "description": "The web interface for the Electronic Music Score device.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ElectronicMusicScore/Interface.git"
+  },
+  "keywords": [
+    "Electronic",
+    "Music",
+    "Score",
+    "Device",
+    "Electronics",
+    "Interface",
+    "Web"
+  ],
+  "author": "Arnau Mora",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ElectronicMusicScore/Interface/issues"
+  },
+  "homepage": "https://github.com/ElectronicMusicScore/Interface#readme"
+}
