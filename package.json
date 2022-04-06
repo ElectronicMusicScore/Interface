@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/ElectronicMusicScore/Interface/issues"
   },
-  "homepage": "https://github.com/ElectronicMusicScore/Interface#readme"
+  "homepage": "https://github.com/ElectronicMusicScore/Interface#readme",
+  "dependencies": {
+    "opensheetmusicdisplay": "^1.4.5"
+  }
 }
