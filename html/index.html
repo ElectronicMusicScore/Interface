@@ -1,25 +1,41 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
     <title>ElectronicMusicScore - Home</title>
+
+    <link href="/node_modules/bulma/css/bulma.min.css" rel="stylesheet" type="text/css"/>
+    <link href="main.css" rel="stylesheet" type="text/css"/>
 </head>
-<body>
-<div id="osmdContainer"></div>
+<body class="has-navbar-fixed-top">
+<div class="container">
+    <nav aria-label="main navigation" class="navbar is-fixed-top" role="navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item"></a>
+
+            <a aria-expanded="false" aria-label="menu" class="navbar-burger" data-target="navbarMainMenu" role="button">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div class="navbar-menu" id="navbarMainMenu">
+            <a class="navbar-item">
+                Home
+            </a>
+        </div>
+    </nav>
+
+    <div id="osmdContainer"></div>
+</div>
+
+<a class="nav-left-button button"><img alt="..." src="icons/chevron_left_black_24dp.svg"/></a>
+<a class="nav-right-button button"><img alt="..." src="icons/chevron_left_black_24dp.svg"/></a>
 
 <script src="/node_modules/opensheetmusicdisplay/build/opensheetmusicdisplay.min.js"></script>
-<script>
-    const osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay("osmdContainer");
-    osmd.setOptions({
-        backend: "canvas",
-        drawTitle: true,
-        // drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
-    });
-    osmd
-        .load("/MozaVeilSample.xml")
-        .then(
-            function () {
-                osmd.render();
-            }
-        );
-</script>
+<script src="main.js"></script>
 </body>
 </html>
