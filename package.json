@@ -27,5 +27,9 @@
   "homepage": "https://github.com/ElectronicMusicScore/Interface#readme",
   "dependencies": {
     "opensheetmusicdisplay": "^1.4.5"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3"
   }
 }
