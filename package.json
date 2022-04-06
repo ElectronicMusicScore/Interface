@@ -27,7 +27,8 @@
   },
   "homepage": "https://github.com/ElectronicMusicScore/Interface#readme",
   "dependencies": {
-    "opensheetmusicdisplay": "^1.4.5"
+    "opensheetmusicdisplay": "^1.4.5",
+    "bulma": "^0.9.3"
   },
   "devDependencies": {
     "dotenv": "^16.0.0",
