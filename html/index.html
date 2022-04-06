@@ -1,0 +1,25 @@
+<html lang="en">
+<head>
+    <title>ElectronicMusicScore - Home</title>
+</head>
+<body>
+<div id="osmdContainer"></div>
+
+<script src="/node_modules/opensheetmusicdisplay/build/opensheetmusicdisplay.min.js"></script>
+<script>
+    const osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay("osmdContainer");
+    osmd.setOptions({
+        backend: "canvas",
+        drawTitle: true,
+        // drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
+    });
+    osmd
+        .load("/MozaVeilSample.xml")
+        .then(
+            function () {
+                osmd.render();
+            }
+        );
+</script>
+</body>
+</html>
