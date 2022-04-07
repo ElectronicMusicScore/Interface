@@ -97,6 +97,15 @@ const ra = ($el, an) => $el.removeAttribute(an);
 const va = ($el) => $el.value;
 
 /**
+ * Shortcut for setting `HTMLElement.innerText`.
+ * @author Arnau Mora
+ * @since 20220407
+ * @param {HTMLElement} $el The element to update.
+ * @param {string} t The new innerText.
+ */
+const st = ($el, t) => $el.innerText = t;
+
+/**
  * Shortcut for `window.event`.
  * @return {Event}
  */
