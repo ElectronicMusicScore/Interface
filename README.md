@@ -30,8 +30,7 @@ npm start
 
 ### Endpoints
 
-`/files` (<kbd>GET</kbd>)
-
+#### `/files` (<kbd>GET</kbd>)
 Used for getting the list of all the files stored in the filesystem.
 
 *Example output:*
@@ -50,8 +49,7 @@ Used for getting the list of all the files stored in the filesystem.
 }
 ```
 
-`/nets` (<kbd>GET</kbd>)
-
+#### `/nets` (<kbd>GET</kbd>)
 Lists all the networks the device has in range.
 
 *Example output:*
@@ -68,3 +66,20 @@ Lists all the networks the device has in range.
   ]
 }
 ```
+
+#### `/connect/:ssid` (<kbd>POST</kbd>)
+
+Requests the device to connect to the Wi-Fi network with SSID `ssid`. Requires the body of the request to contain:
+
+```yml
+# Replace <password> with the password of the network,
+# or leave empty for non-protected networks.
+pass=<password>
+```
+
+Response can be:
+
+* `ok` (`200`): The device was connected successfully.
+* `fail:out-of-range` (`400`): The network is not in range.
+* `fail:auth-error` (`400`): Further authentication is required, or password is wrong.
+* `fail:unknown-error` (`400`): An unexpected error has occurred.
