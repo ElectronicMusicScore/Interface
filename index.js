@@ -29,7 +29,12 @@ app.use(express.static('html'));
 
 // Emulate the device endpoints
 app.get('/files', (req, res) => {
-    res.status(200).send({"files": ["/MozaVeilSample.xml"]});
+    let files = [];
+
+    for (let j = 0; j < Math.floor(Math.random() * 20); j++)
+        files.push('/' + faker.system.fileName());
+
+    res.status(200).send({"files": files});
 });
 app.get('/nets', (req, res) => {
     let networks = [];
