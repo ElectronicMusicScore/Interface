@@ -32,7 +32,23 @@ npm start
 
 `/files`
 
-Used for getting the list of all the files stored in the filesystem. Development server needs faker.
+Used for getting the list of all the files stored in the filesystem.
+
+*Example output:*
+
+```json
+{
+  "files": [
+    "/agent_bypassing.mp2",
+    "/mill_checking.smi",
+    "/bedfordshire_soap_cyan.n3",
+    "/optimized.tsv",
+    "/carolina.potm",
+    "/primary_national.dir",
+    "/montana.ptid"
+  ]
+}
+```
 
 `/nets`
 
