@@ -89,6 +89,14 @@ const sa = ($el, an, av = '') => $el.setAttribute(an, av);
 const ra = ($el, an) => $el.removeAttribute(an);
 
 /**
+ * Shortcut for `HTMLElement.value`.
+ * @author Arnau Mora
+ * @since 20220407
+ * @param {HTMLFormElement|HTMLProgressElement} $el The element to get the value from
+ */
+const va = ($el) => $el.value;
+
+/**
  * Shortcut for `window.event`.
  * @return {Event}
  */
