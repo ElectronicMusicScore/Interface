@@ -39,6 +39,7 @@
     "htmlnano": "^2.0.2",
     "postcss": "^8.4.12",
     "posthtml": "^0.16.6",
+    "body-parser": "^1.20.0",
     "posthtml-minify-classnames": "^0.3.0",
     "terser": "^5.12.1",
     "uncss": "^0.17.3"
