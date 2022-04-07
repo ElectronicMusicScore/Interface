@@ -62,6 +62,25 @@ const cr = ($el, cn) => $el.classList.remove(cn);
 const ct = ($el, cn) => $el.classList.toggle(cn);
 
 /**
+ * Shortcut for `DOMElement.setAttribute`.
+ * @author Arnau Mora
+ * @since 20220407
+ * @param {HTMLElement} $el the element to add the attribute to.
+ * @param {string} an The attribute name.
+ * @param {string} av The attribute value
+ */
+const sa = ($el, an, av = '') => $el.setAttribute(an, av);
+
+/**
+ * Shortcut for `DOMElement.removeAttribute`.
+ * @author Arnau Mora
+ * @since 20220407
+ * @param {HTMLElement} $el the element to remove the attribute from.
+ * @param {string} an The attribute name.
+ */
+const ra = ($el, an) => $el.removeAttribute(an);
+
+/**
  * Shortcut for `window.event`.
  * @return {Event}
  */
