@@ -32,9 +32,15 @@
     "opensheetmusicdisplay": "^1.4.5"
   },
   "devDependencies": {
+    "@faker-js/faker": "^6.1.2",
+    "cssnano": "^5.1.7",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "htmlnano": "^2.0.2",
+    "postcss": "^8.4.12",
     "posthtml": "^0.16.6",
-    "posthtml-minify-classnames": "^0.3.0"
+    "posthtml-minify-classnames": "^0.3.0",
+    "terser": "^5.12.1",
+    "uncss": "^0.17.3"
   }
 }
