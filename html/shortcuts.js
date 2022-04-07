@@ -91,7 +91,7 @@ const we = () => window.event
  * @param {string} id The id of the element to search for.
  * @return {HTMLElement}
  */
-const $ = (id) => document.getElementById(id);
+const _ = (id) => document.getElementById(id);
 
 /**
  * Shortcut for `document.querySelectorAll`.

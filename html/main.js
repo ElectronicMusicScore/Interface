@@ -26,7 +26,7 @@ dell(() => {
             elc(el, () => {
                 // Get the target from the "data-target" attribute
                 const target = el.dataset.target;
-                const $target = $(target);
+                const $target = _(target);
 
                 // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
                 ct(el, 'is-active');

@@ -3,27 +3,27 @@ dell(() => {
      * The find networks button.
      * @type {HTMLElement}
      */
-    const ssidBtn = $('ssid-src');
+    const ssidBtn = _('ssid-src');
     /**
      * The progress bar that shows the find networks progress.
      * @type {HTMLProgressElement}
      */
-    const ssidPb = $('ssid-prog');
+    const ssidPb = _('ssid-prog');
     /**
      * The `fieldset` that controls the disabled status of all the ssid fields.
      * @type {HTMLElement}
      */
-    const ssidFs = $('ssid-fs');
+    const ssidFs = _('ssid-fs');
     /**
      * The `select` parent element used for selecting the SSID to connect to.
      * @type {HTMLElement}
      */
-    const ssidSel = $('ssid-sel');
+    const ssidSel = _('ssid-sel');
     /**
      * The error message for the SSID field.
      * @type {HTMLElement}
      */
-    const ssidErr = $('ssid-err');
+    const ssidErr = _('ssid-err');
     /**
      * The `select` element used for selecting the SSID to connect to.
      * @type {HTMLElement}

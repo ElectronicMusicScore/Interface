@@ -28,7 +28,7 @@ dell(() => {
 
     // Add a click event on buttons to open a specific modal
     (qsa('.mt') || []).forEach(($t) => {
-        const $tg = $($t.dataset.target);
+        const $tg = _($t.dataset.target);
         console.log($tg);
 
         elc($t, () => om($tg));
