@@ -32,6 +32,7 @@ app.use(
 
 // Serve the html files
 app.use(express.static('html'));
+app.use(express.static('build'));
 
 // Emulate the device endpoints
 app.get('/files', (req, resp) => {
