@@ -35,6 +35,14 @@ const el = ($el, type, listener) => $el.addEventListener(type, listener);
 const elc = ($el, listener) => $el.addEventListener('click', listener);
 
 /**
+ * Consumes the event `e` by running `e.preventDefault()`.
+ * @author Arnau Mora
+ * @since 20220407
+ * @param {Event} e The event to consume.
+ */
+const ec = (e) => e.preventDefault();
+
+/**
  * Shortcut for `DOMElement.classList.add`.
  * @author Arnau Mora
  * @since 20220407
