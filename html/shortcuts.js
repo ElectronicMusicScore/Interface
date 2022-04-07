@@ -21,7 +21,7 @@ const dell = (listener) => document.addEventListener('DOMContentLoaded', listene
  * @since 20220407
  * @param {HTMLElement} $el the element to add the listener to.
  * @param {string} type The listener type.
- * @param {Function} listener What to get called when the event occurs.
+ * @param {(this:HTMLElement, ev: HTMLElementEventMap[string]) => any} listener What to get called when the event occurs.
  */
 const el = ($el, type, listener) => $el.addEventListener(type, listener);
 
@@ -30,7 +30,7 @@ const el = ($el, type, listener) => $el.addEventListener(type, listener);
  * @author Arnau Mora
  * @since 20220407
  * @param {HTMLElement} $el the element to add the listener to.
- * @param {Function} listener What to get called when the event occurs.
+ * @param {(this:HTMLElement, ev: HTMLElementEventMap[string]) => any} listener What to get called when the event occurs.
  */
 const elc = ($el, listener) => $el.addEventListener('click', listener);
 
