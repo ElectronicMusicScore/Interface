@@ -67,6 +67,13 @@ dell(() => {
      */
     let ssids = null;
 
+    // Set initial state for badge
+    cr(wifiState, 'is-success');
+    cr(wifiState, 'is-info');
+
+    // Set initial state for modal
+    cr(_('wcm'), 'is-active');
+
     elc(ssidBtn, async () => {
         // Disable all fields of the ssid row
         sa(ssidFs, 'disabled');
