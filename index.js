@@ -10,6 +10,8 @@ const path = require('path');
 
 const {faker} = require('@faker-js/faker');
 
+const {generateRandom} = require('./utils');
+
 const app = express();
 
 // The opensheetmusicdisplay script
@@ -31,7 +33,7 @@ app.use(express.static('html'));
 app.get('/files', (req, res) => {
     let files = [];
 
-    for (let j = 0; j < Math.floor(Math.random() * 20); j++)
+    for (let j = 0; j < generateRandom(5); j++)
         files.push('/' + faker.system.fileName());
 
     res.status(200).send({"files": files});
@@ -39,7 +41,7 @@ app.get('/files', (req, res) => {
 app.get('/nets', (req, res) => {
     let networks = [];
 
-    for (let j = 0; j < Math.floor(Math.random() * 20); j++)
+    for (let j = 0; j < generateRandom(15); j++)
         networks.push({
             ssid: faker.word.adjective() + ' ' + faker.word.noun(),
         });
