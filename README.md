@@ -30,7 +30,7 @@ npm start
 
 ### Endpoints
 
-`/files`
+`/files` (<kbd>GET</kbd>)
 
 Used for getting the list of all the files stored in the filesystem.
 
@@ -50,7 +50,7 @@ Used for getting the list of all the files stored in the filesystem.
 }
 ```
 
-`/nets`
+`/nets` (<kbd>GET</kbd>)
 
 Lists all the networks the device has in range.
 
