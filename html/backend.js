@@ -56,6 +56,12 @@ dell(() => {
     const ssidErr = _('ssid-error');
 
     /**
+     * The Wi-Fi state badge.
+     * @type {HTMLElement}
+     */
+    const wifiState = _('wifi-state');
+
+    /**
      * Stores the last response's Wi-Fi ssids.
      * @type {{ssid:string}[]|null}
      */
@@ -114,6 +120,10 @@ dell(() => {
         sa(ssidFFs, 'disabled');
         ca(ssidConn, 'is-loading');
         ca(ssidErr, 'is-hidden');
+        cr(wifiState, 'is-success');
+        cr(wifiState, 'is-danger');
+        ca(wifiState, 'is-info');
+        st(wifiState, 'Connecting');
 
         if (!ssids)
             return alert('Please, search for networks first.');
@@ -125,6 +135,10 @@ dell(() => {
         if (!ssid) {
             ra(ssidFFs, 'disabled');
             cr(ssidConn, 'is-loading');
+            cr(wifiState, 'is-success');
+            ca(wifiState, 'is-danger');
+            cr(wifiState, 'is-info');
+            st(wifiState, 'Disconnected');
             return alert('Could not find the set network.');
         }
 
@@ -135,6 +149,10 @@ dell(() => {
             )) {
                 ra(ssidFFs, 'disabled');
                 cr(ssidConn, 'is-loading');
+                cr(wifiState, 'is-success');
+                ca(wifiState, 'is-danger');
+                cr(wifiState, 'is-info');
+                st(wifiState, 'Disconnected');
                 return;
             }
 
@@ -144,14 +162,23 @@ dell(() => {
                 ra(ssidFFs, 'disabled');
                 cr(ssidConn, 'is-loading');
 
+                cr(wifiState, 'is-success');
+                cr(wifiState, 'is-danger');
+                cr(wifiState, 'is-info');
+
                 if (response.ok) {
+                    ca(wifiState, 'is-success');
+                    st(wifiState, 'Connected');
                     alert("Connected successfully!");
                     cr(_('wcm'), 'is-active');
                 } else {
                     const blob = await response.blob();
                     const err = await blob.text();
                     console.error(err);
+
                     cr(ssidErr, 'is-hidden');
+                    ca(wifiState, 'is-danger');
+                    st(wifiState, 'Disconnected');
 
                     switch (err) {
                         case 'fail:out-of-range':
