@@ -11,7 +11,7 @@
 </head>
 <body class="has-navbar-fixed-top">
 <!-- Wifi connection modal -->
-<div class="modal" id="wcm">
+<div class="modal is-active" id="wcm">
     <div class="modal-background"></div>
     <div class="modal-content">
         <form class="box" id="ssid-form">
@@ -73,8 +73,11 @@
 
         <div class="navbar-menu" id="navbarMainMenu">
             <a class="navbar-item">Home</a>
-            <a class="navbar-item mt" data-target="wcm">Wi-Fi <span class="tag is-danger" id="wifi-state"
-                                                                    style="margin-left: 5px">Disconnected</span></a>
+            <a class="navbar-item mt" data-target="wcm">
+                Wi-Fi
+                <span class="tag is-danger is-info is-active" id="wifi-state"
+                      style="margin-left: 5px">Disconnected</span>
+            </a>
         </div>
     </nav>
 
