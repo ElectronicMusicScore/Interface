@@ -6,6 +6,7 @@ require('dotenv').config();
 const HTTP_PORT = process.env.HTTP_PORT || 3000;
 
 const express = require("express");
+const bodyParser = require('body-parser');
 const path = require('path');
 
 const {faker} = require('@faker-js/faker');
@@ -13,6 +14,9 @@ const {faker} = require('@faker-js/faker');
 const {generateRandom} = require('./utils');
 
 const app = express();
+
+// For parsing body data
+app.use(bodyParser.urlencoded());
 
 // The opensheetmusicdisplay script
 app.use(
@@ -30,15 +34,16 @@ app.use(
 app.use(express.static('html'));
 
 // Emulate the device endpoints
-app.get('/files', (req, res) => {
+app.get('/files', (req, resp) => {
     let files = [];
 
     for (let j = 0; j < generateRandom(5); j++)
         files.push('/' + faker.system.fileName());
 
-    res.status(200).send({"files": files});
+    resp.status(200)
+        .send({"files": files});
 });
-app.get('/nets', (req, res) => {
+app.get('/nets', (req, resp) => {
     let networks = [];
 
     for (let j = 0; j < generateRandom(15); j++)
@@ -46,7 +51,33 @@ app.get('/nets', (req, res) => {
             ssid: faker.word.adjective() + ' ' + faker.word.noun(),
         });
 
-    res.status(200).send({"networks": networks});
+    resp.status(200)
+        .send({"networks": networks});
+});
+app.post('/connect/:ssid', (req, resp) => {
+    const params = req.params;
+    const body = req.body;
+
+    const ssid = params['ssid'];
+    const password = body['pass'];
+    console.log('Should connect to', ssid, 'with', password);
+
+    let result;
+    if (faker.datatype.boolean())
+        result = 'ok';
+    else switch (generateRandom(2)) {
+        case 0:
+            result = 'fail:out-of-range';
+            break;
+        case 1:
+            result = 'fail:auth-error';
+            break;
+        default:
+            result = 'fail:unknown-error';
+            break;
+    }
+    resp.status(result === 'ok' ? 200 : 400)
+        .send(result);
 });
 
 app.listen(HTTP_PORT, () => {
