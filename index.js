@@ -11,6 +11,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
 const fse = require('fs-extra');
+const mime = require('mime-types');
 
 const {faker} = require('@faker-js/faker');
 
@@ -61,6 +62,19 @@ app.get('/files', (req, resp) => {
 
     resp.status(200)
         .send({files: filesList, info});
+});
+app.get('/file', (req, resp) => {
+    const query = req.query;
+    const queryPath = query.path;
+    if (!queryPath)
+        return resp.status(400).send('error');
+    const filePath = path.join(cacheFs, queryPath);
+    if (!fs.existsSync(filePath))
+        return resp.status(404).send('error');
+    const ext = path.extname(filePath);
+    const type = mime.lookup(ext);
+    const content = fs.readFileSync(filePath);
+    resp.status(200).type(type).send(content);
 });
 app.get('/nets', (req, resp) => {
     let networks = [];
