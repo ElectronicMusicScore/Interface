@@ -40,6 +40,11 @@ dell(async () => {
             cr(card, 'is-hidden');
             qsa('[data-source="filename"]', card).forEach((i) => st(i, nameNoExt));
             qsa('[data-source="size"]', card).forEach((i) => st(i, humanFileSize(size)));
+            qsa('[data-source="load"]', card).forEach((i) => elc(i, (ev) => {
+                ec(ev);
+                loadSheet("/file?path=" + filename);
+                cm(_('flm'));
+            }));
 
             console.log('Appending', card);
             filesList.appendChild(card);
