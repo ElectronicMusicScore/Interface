@@ -31,6 +31,7 @@ npm start
 ### Endpoints
 
 #### `/files` (<kbd>GET</kbd>)
+
 Used for getting the list of all the files stored in the filesystem.
 
 *Example output:*
@@ -38,18 +39,24 @@ Used for getting the list of all the files stored in the filesystem.
 ```json
 {
   "files": [
-    "/agent_bypassing.mp2",
-    "/mill_checking.smi",
-    "/bedfordshire_soap_cyan.n3",
-    "/optimized.tsv",
-    "/carolina.potm",
-    "/primary_national.dir",
-    "/montana.ptid"
+    {
+      "path": "/regional.c11amz",
+      "size": 69507
+    },
+    {
+      "path": "/garden_gloves_superstructure.mp21",
+      "size": 16377
+    },
+    {
+      "path": "/hack_programming_schemas.p7m",
+      "size": 52174
+    }
   ]
 }
 ```
 
 #### `/nets` (<kbd>GET</kbd>)
+
 Lists all the networks the device has in range.
 
 *Example output:*
