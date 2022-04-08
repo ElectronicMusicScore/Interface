@@ -40,6 +40,7 @@
     "fs-extra": "^10.0.1",
     "html-minifier": "^4.0.0",
     "htmlnano": "^2.0.2",
+    "mime-types": "^2.1.35",
     "postcss": "^8.4.12",
     "posthtml": "^0.16.6",
     "posthtml-minify-classnames": "^0.3.0",
