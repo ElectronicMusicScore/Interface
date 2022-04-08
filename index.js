@@ -35,6 +35,7 @@ app.use(express.static('html'));
 app.use(express.static('build'));
 
 // Emulate the device endpoints
+app.get('/ping', (req, resp) => resp.status(200).send('ok'));
 app.get('/files', (req, resp) => {
     let files = [];
 
