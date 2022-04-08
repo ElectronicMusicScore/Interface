@@ -40,7 +40,7 @@ app.get('/files', (req, resp) => {
     let files = [];
 
     for (let j = 0; j < generateRandom(5); j++)
-        files.push('/' + faker.system.fileName());
+        files.push({path: '/' + faker.system.fileName(), size: faker.datatype.number()});
 
     resp.status(200)
         .send({"files": files});
