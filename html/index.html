@@ -67,6 +67,38 @@
     <button aria-label="close" class="modal-close is-large"></button>
 </div>
 
+<!-- Files list modal -->
+<div class="modal is-active" id="flm">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="box">
+            <h1 class="title">Files</h1>
+            <h2 class="subtitle is-6">Space available: 4KiB/1MiB</h2>
+            <progress class="progress is-small is-info" id="files-spc" max="100" value="10">10%</progress>
+
+            <progress class="progress is-small is-hidden" id="files-prog" max="100"></progress>
+
+            <div class="tile is-ancestor" id="files-lst"></div>
+            <div class="tile is-parent is-hidden" id="files-card">
+                <div class="tile is-child card">
+                    <div class="card-content">
+                        <div class="content">
+                            <h5 class="subtitle is-5" data-source="filename">Filename</h5>
+                            <p>Size: <span data-source="size"></span></p>
+                        </div>
+                    </div>
+                    <footer class="card-footer">
+                        <a class="card-footer-item" href="#">Load</a>
+                        <a class="card-footer-item" href="#">Rename</a>
+                        <a class="card-footer-item" href="#">Delete</a>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button aria-label="close" class="modal-close is-large"></button>
+</div>
+
 <div class="container">
     <nav aria-label="main navigation" class="navbar is-fixed-top" role="navigation">
         <div class="navbar-brand">
@@ -80,7 +112,7 @@
         </div>
 
         <div class="navbar-menu" id="navbarMainMenu">
-            <a class="navbar-item">Home</a>
+            <a class="navbar-item mt" data-target="flm">Files</a>
             <a class="navbar-item mt" data-target="wcm">
                 Wi-Fi
                 <span class="tag is-danger is-info is-active" id="wifi-state"
@@ -97,9 +129,11 @@
 
 <script src="/node_modules/opensheetmusicdisplay/build/opensheetmusicdisplay.min.js"></script>
 <script src="shortcuts.js"></script>
+<script src="utils.js"></script>
 <script src="down-detector.js"></script>
 <script src="main.js"></script>
 <script src="modal.js"></script>
 <script src="backend.js"></script>
+<script src="files-backend.js"></script>
 </body>
 </html>
