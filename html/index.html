@@ -10,6 +10,12 @@
     <link href="main.css" rel="stylesheet" type="text/css"/>
 </head>
 <body class="has-navbar-fixed-top">
+
+<!-- Server down notification -->
+<div class="notification is-danger is-hidden" id="sdn">
+    Server disconnected. Please, check your connection.
+</div>
+
 <!-- Wifi connection modal -->
 <div class="modal is-active" id="wcm">
     <div class="modal-background"></div>
@@ -27,6 +33,7 @@
                     <div class="field has-addons">
                         <div class="control is-expanded">
                             <div class="select is-fullwidth" id="ssid-sel">
+                                <!--suppress HtmlFormInputWithoutLabel -->
                                 <select id="ssid-val" name="ssid" required>
                                     <option disabled hidden selected value="">Choose SSID</option>
                                 </select>
@@ -46,6 +53,7 @@
                 <div class="field" style="margin-top: 10px">
                     <label class="label">Password</label>
                     <div class="control">
+                        <!--suppress HtmlFormInputWithoutLabel -->
                         <input class="input" id="ssid-pass" placeholder="Password" type="password">
                     </div>
                 </div>
@@ -89,6 +97,7 @@
 
 <script src="/node_modules/opensheetmusicdisplay/build/opensheetmusicdisplay.min.js"></script>
 <script src="shortcuts.js"></script>
+<script src="down-detector.js"></script>
 <script src="main.js"></script>
 <script src="modal.js"></script>
 <script src="backend.js"></script>
