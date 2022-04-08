@@ -1,4 +1,5 @@
 let _osmd;
+let iDrop, iItem;
 
 /**
  * Loads a sheet into the viewer.
@@ -12,9 +13,6 @@ const loadSheet = (url) => {
         .load(url)
         .then(() => {
             _osmd.render();
-
-            const iDrop = _('i-drop');
-            const iItem = _('i-item', iDrop);
 
             iDrop.innerHTML = '';
             const isms = _osmd.sheet.Instruments;
@@ -40,6 +38,10 @@ const loadSheet = (url) => {
 };
 
 dell(() => {
+    // Initialize instruments dropdown
+    iDrop = _('i-drop');
+    iItem = _('i-item', iDrop);
+
     // Load OSMD
     console.log("Initializing osmd...");
     _osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay("osmdContainer");
