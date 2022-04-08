@@ -4,10 +4,13 @@ console.warn("Warning! Do not use in production. Testing server.");
 require('dotenv').config();
 
 const HTTP_PORT = process.env.HTTP_PORT || 3000;
+const fsPath = process.env.FS_PATH || './fs';
 
 const express = require("express");
 const bodyParser = require('body-parser');
 const path = require('path');
+const fs = require('fs');
+const fse = require('fs-extra');
 
 const {faker} = require('@faker-js/faker');
 
@@ -35,13 +38,20 @@ app.use(express.static('html'));
 app.use(express.static('build'));
 
 // Instantiate the endpoints' data
+const cacheFs = fsPath + '.cache';
+if (fs.existsSync(cacheFs))
+    fs.rmSync(cacheFs, {recursive: true, force: true});
+fse.copySync(fsPath, cacheFs, {});
+
 let filesList = [];
 let usedSpace = 0;
-for (let j = 0; j < generateRandom(5); j++) {
-    const size = faker.datatype.number();
+fs.readdirSync(cacheFs).forEach((file) => {
+    const filePath = path.join(cacheFs, file);
+    const stats = fs.lstatSync(filePath);
+    const size = stats.size
     usedSpace += size;
-    filesList.push({path: '/' + faker.system.fileName(), size});
-}
+    filesList.push({path: `/${file}`, size});
+});
 const availableSpace = faker.datatype.number({min: usedSpace});
 
 // Emulate the device endpoints
