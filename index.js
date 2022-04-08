@@ -34,23 +34,23 @@ app.use(
 app.use(express.static('html'));
 app.use(express.static('build'));
 
+// Instantiate the endpoints' data
+let filesList = [];
+let usedSpace = 0;
+for (let j = 0; j < generateRandom(5); j++) {
+    const size = faker.datatype.number();
+    usedSpace += size;
+    filesList.push({path: '/' + faker.system.fileName(), size});
+}
+const availableSpace = faker.datatype.number({min: usedSpace});
+
 // Emulate the device endpoints
 app.get('/ping', (req, resp) => resp.status(200).send('ok'));
 app.get('/files', (req, resp) => {
-    let files = [];
-    let used = 0;
-
-    for (let j = 0; j < generateRandom(5); j++) {
-        const size = faker.datatype.number();
-        used += size;
-        files.push({path: '/' + faker.system.fileName(), size});
-    }
-
-    const max = faker.datatype.number({min: used});
-    const info = {used, max};
+    const info = {'used': usedSpace, 'max': availableSpace};
 
     resp.status(200)
-        .send({files, info});
+        .send({files: filesList, info});
 });
 app.get('/nets', (req, resp) => {
     let networks = [];
