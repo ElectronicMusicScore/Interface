@@ -5,15 +5,22 @@ dell(async () => {
      */
     const filesList = _('files-lst');
     /**
-     * The sample card for a item in the files list.
+     * The sample card for an item in the files list.
      * @type {HTMLElement}
      */
     const filesCard = _('files-card');
+    /**
+     * The progress bar that shows the filesystem usage percent.
+     * @type {HTMLProgressElement}
+     */
+    const filesUsage = _('files-spc');
 
     // Set initial state for modal
     cr(_('flm'), 'is-active');
 
     const loadFiles = async () => {
+        console.log('Loading files...');
+
         const fList = await fetch('/files');
         if (!fList.ok)
             // TODO: Display error in UI
@@ -29,10 +36,13 @@ dell(async () => {
          * @type {{used:number,max:number}}
          */
         const info = json.info;
-        console.log('Files:', files);
+        const used = (info.used / info.max) * 100;
 
         st(_('files-used'), humanFileSize(info.used));
         st(_('files-avail'), humanFileSize(info.max));
+        vs(filesUsage, used);
+        cr(filesUsage, 'is-info', 'is-success', 'is-warning', 'is-danger');
+        ca(filesUsage, used < 30 ? 'is-info' : used < 50 ? 'is-success' : used < 80 ? 'is-warning' : 'is-danger');
 
         for (const f in files) {
             const file = files[f];
@@ -57,6 +67,5 @@ dell(async () => {
             filesList.appendChild(card);
         }
     }
-    console.log('Loading files...')
     await loadFiles();
 });
