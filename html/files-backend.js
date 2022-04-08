@@ -24,7 +24,15 @@ dell(async () => {
          * @type {{path:string,size:number}[]}
          */
         const files = json.files;
+        /**
+         * Provides information about the state of the filesystem.
+         * @type {{used:number,max:number}}
+         */
+        const info = json.info;
         console.log('Files:', files);
+
+        st(_('files-used'), humanFileSize(info.used));
+        st(_('files-avail'), humanFileSize(info.max));
 
         for (const f in files) {
             const file = files[f];
@@ -46,7 +54,6 @@ dell(async () => {
                 cm(_('flm'));
             }));
 
-            console.log('Appending', card);
             filesList.appendChild(card);
         }
     }
