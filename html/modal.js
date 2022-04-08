@@ -7,18 +7,24 @@
  * @file modal.js
  */
 
+// Functions to open and close a modal
+/**
+ * Open Modal. Opens the modal at element `$el`.
+ * @author Arnau Mora
+ * @since 20220407
+ * @param $el
+ */
+const om = ($el) => ca($el, 'is-active');
+
+/**
+ * Close Modal. Hides the modal at element `$el`.
+ * @author Arnau Mora
+ * @since 20220407
+ * @param $el
+ */
+const cm = ($el) => cr($el, 'is-active');
+
 dell(() => {
-    // Functions to open and close a modal
-    /**
-     * Open Modal. Opens the modal at element `$el`.
-     * @author Arnau Mora
-     * @since 20220407
-     * @param $el
-     */
-    const om = ($el) => ca($el, 'is-active');
-
-    const cm = ($el) => cr($el, 'is-active');
-
     /**
      * Close all modals. Hides all the modals that are being displayed.
      * @author Arnau Mora
