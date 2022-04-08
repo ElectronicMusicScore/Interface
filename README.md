@@ -40,18 +40,22 @@ Used for getting the list of all the files stored in the filesystem.
 {
   "files": [
     {
-      "path": "/regional.c11amz",
-      "size": 69507
+      "path": "/pants_drive_clothing.xz",
+      "size": 59944
     },
     {
-      "path": "/garden_gloves_superstructure.mp21",
-      "size": 16377
+      "path": "/personal.ssdl",
+      "size": 37261
     },
     {
-      "path": "/hack_programming_schemas.p7m",
-      "size": 52174
+      "path": "/operative_forward.msf",
+      "size": 40468
     }
-  ]
+  ],
+  "info": {
+    "used": 137673,
+    "max": 223553
+  }
 }
 ```
 
