@@ -33,19 +33,11 @@ dell(() => {
     const cam = () => (qsa('.modal') || []).forEach(($m) => cm($m));
 
     // Add a click event on buttons to open a specific modal
-    (qsa('.mt') || []).forEach(($t) => {
-        const $tg = _($t.dataset.target);
-        console.log($tg);
-
-        elc($t, () => om($tg));
-    });
+    (qsa('.mt') || []).forEach(($t) => elc($t, () => om(_($t.dataset.target))));
 
     // Add a click event on various child elements to close the parent modal
-    (qsa('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
-        const $target = $close.closest('.modal');
-
-        elc($close, () => cm($target));
-    });
+    (qsa('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || [])
+        .forEach(($close) => elc($close, () => cm($close.closest('.modal'))));
 
     // Add a keyboard event to close all modals
     del('keydown', (ev) => {
