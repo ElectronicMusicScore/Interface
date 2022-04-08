@@ -19,9 +19,9 @@ const dell = (listener) => document.addEventListener('DOMContentLoaded', listene
  * Shortcut for `document.addEventListener`.
  * @author Arnau Mora
  * @since 20220407
- * @param {HTMLElement} $el the element to add the listener to.
+ * @param {HTMLElement|Node} $el the element to add the listener to.
  * @param {string} type The listener type.
- * @param {(this:HTMLElement, ev: HTMLElementEventMap[string]) => any} listener What to get called when the event occurs.
+ * @param {EventListenerOrEventListenerObject} listener What to get called when the event occurs.
  */
 const el = ($el, type, listener) => $el.addEventListener(type, listener);
 
@@ -29,7 +29,7 @@ const el = ($el, type, listener) => $el.addEventListener(type, listener);
  * Shortcut for `document.addEventListener` for 'click'.
  * @author Arnau Mora
  * @since 20220407
- * @param {HTMLElement} $el the element to add the listener to.
+ * @param {HTMLElement|Node} $el the element to add the listener to.
  * @param {(this:HTMLElement, ev: HTMLElementEventMap[string]) => any} listener What to get called when the event occurs.
  */
 const elc = ($el, listener) => $el.addEventListener('click', listener);
@@ -46,7 +46,7 @@ const ec = (e) => e.preventDefault();
  * Shortcut for `DOMElement.classList.add`.
  * @author Arnau Mora
  * @since 20220407
- * @param {HTMLElement} $el the element to add the classname to.
+ * @param {HTMLElement|Node} $el the element to add the classname to.
  * @param {string} cn The classname to add.
  */
 const ca = ($el, cn) => $el.classList.add(cn);
@@ -64,7 +64,7 @@ const cr = ($el, cn) => $el.classList.remove(cn);
  * Shortcut for `DOMElement.classList.toggle`.
  * @author Arnau Mora
  * @since 20220407
- * @param {HTMLElement} $el the element to remove the classname to.
+ * @param {HTMLElement|Node} $el the element to remove the classname to.
  * @param {string} cn The classname to toggle.
  */
 const ct = ($el, cn) => $el.classList.toggle(cn);
@@ -73,17 +73,27 @@ const ct = ($el, cn) => $el.classList.toggle(cn);
  * Shortcut for `DOMElement.setAttribute`.
  * @author Arnau Mora
  * @since 20220407
- * @param {HTMLElement} $el the element to add the attribute to.
+ * @param {HTMLElement|Node} $el the element to add the attribute to.
  * @param {string} an The attribute name.
  * @param {string} av The attribute value
  */
 const sa = ($el, an, av = '') => $el.setAttribute(an, av);
 
 /**
+ * Shortcut for `DOMElement.getAttribute`.
+ * @author Arnau Mora
+ * @since 20220407
+ * @param {HTMLElement|Node} $el the element to add the attribute to.
+ * @param {string} an The attribute name.
+ * @return {string|null}
+ */
+const ga = ($el, an) => $el.getAttribute(an);
+
+/**
  * Shortcut for `DOMElement.removeAttribute`.
  * @author Arnau Mora
  * @since 20220407
- * @param {HTMLElement} $el the element to remove the attribute from.
+ * @param {HTMLElement|Node} $el the element to remove the attribute from.
  * @param {string} an The attribute name.
  */
 const ra = ($el, an) => $el.removeAttribute(an);
@@ -97,10 +107,19 @@ const ra = ($el, an) => $el.removeAttribute(an);
 const va = ($el) => $el.value;
 
 /**
+ * Shortcut for `HTMLElement.value`.
+ * @author Arnau Mora
+ * @since 20220407
+ * @param {HTMLFormElement|HTMLProgressElement} $el The element to set the value to
+ * @param {string} v The value to set.
+ */
+const vs = ($el, v) => $el.value = v;
+
+/**
  * Shortcut for setting `HTMLElement.innerText`.
  * @author Arnau Mora
  * @since 20220407
- * @param {HTMLElement} $el The element to update.
+ * @param {HTMLElement|Node} $el The element to update.
  * @param {string} t The new innerText.
  */
 const st = ($el, t) => $el.innerText = t;
@@ -114,9 +133,10 @@ const we = () => window.event
 /**
  * Shortcut for `document.getElementById`.
  * @param {string} id The id of the element to search for.
+ * @param {Document|HTMLElement|Node} $el The element to search into.
  * @return {HTMLElement}
  */
-const _ = (id) => document.getElementById(id);
+const _ = (id, $el = document) => $el === document ? $el.getElementById(id) : $el.querySelector(`#${id}`);
 
 /**
  * Shortcut for `document.querySelectorAll`.
