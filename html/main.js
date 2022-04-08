@@ -48,7 +48,7 @@ dell(() => {
         drawTitle: true,
         // drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
     });
-    loadSheet("/MozaVeilSample.xml");
+    loadSheet("/file?path=MozaVeilSample.xml");
 
 
     // Get all "navbar-burger" elements
