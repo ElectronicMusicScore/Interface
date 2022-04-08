@@ -49,7 +49,7 @@ const ec = (e) => e.preventDefault();
  * @param {HTMLElement|Node} $el the element to add the classname to.
  * @param {string} cn The classname to add.
  */
-const ca = ($el, cn) => $el.classList.add(cn);
+const ca = ($el, ...cn) => cn.forEach((cl) => $el.classList.add(cl));
 
 /**
  * Shortcut for `DOMElement.classList.remove`.
@@ -58,7 +58,7 @@ const ca = ($el, cn) => $el.classList.add(cn);
  * @param {HTMLElement|Node} $el the element to remove the classname to.
  * @param {string} cn The classname to remove.
  */
-const cr = ($el, cn) => $el.classList.remove(cn);
+const cr = ($el, ...cn) => cn.forEach((cl) => $el.classList.remove(cl));
 
 /**
  * Shortcut for `DOMElement.classList.toggle`.
@@ -67,7 +67,7 @@ const cr = ($el, cn) => $el.classList.remove(cn);
  * @param {HTMLElement|Node} $el the element to remove the classname to.
  * @param {string} cn The classname to toggle.
  */
-const ct = ($el, cn) => $el.classList.toggle(cn);
+const ct = ($el, ...cn) => cn.forEach((cl) => $el.classList.toggle(cl));
 
 /**
  * Shortcut for `DOMElement.setAttribute`.
@@ -111,7 +111,7 @@ const va = ($el) => $el.value;
  * @author Arnau Mora
  * @since 20220407
  * @param {HTMLFormElement|HTMLProgressElement} $el The element to set the value to
- * @param {string} v The value to set.
+ * @param {string|number} v The value to set.
  */
 const vs = ($el, v) => $el.value = v;
 
