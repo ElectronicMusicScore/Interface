@@ -55,7 +55,7 @@ const ca = ($el, cn) => $el.classList.add(cn);
  * Shortcut for `DOMElement.classList.remove`.
  * @author Arnau Mora
  * @since 20220407
- * @param {HTMLElement} $el the element to remove the classname to.
+ * @param {HTMLElement|Node} $el the element to remove the classname to.
  * @param {string} cn The classname to remove.
  */
 const cr = ($el, cn) => $el.classList.remove(cn);
@@ -121,6 +121,7 @@ const _ = (id) => document.getElementById(id);
 /**
  * Shortcut for `document.querySelectorAll`.
  * @param {string} q The query to select
- * @return {HTMLElement}
+ * @param {HTMLElement|Node} $el The element to search into.
+ * @return {NodeListOf<Element>}
  */
-const qsa = (q) => document.querySelectorAll(q);
+const qsa = (q, $el = document) => $el.querySelectorAll(q);
