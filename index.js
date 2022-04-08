@@ -38,12 +38,19 @@ app.use(express.static('build'));
 app.get('/ping', (req, resp) => resp.status(200).send('ok'));
 app.get('/files', (req, resp) => {
     let files = [];
+    let used = 0;
 
-    for (let j = 0; j < generateRandom(5); j++)
-        files.push({path: '/' + faker.system.fileName(), size: faker.datatype.number()});
+    for (let j = 0; j < generateRandom(5); j++) {
+        const size = faker.datatype.number();
+        used += size;
+        files.push({path: '/' + faker.system.fileName(), size});
+    }
+
+    const max = faker.datatype.number({min: used});
+    const info = {used, max};
 
     resp.status(200)
-        .send({"files": files});
+        .send({files, info});
 });
 app.get('/nets', (req, resp) => {
     let networks = [];
