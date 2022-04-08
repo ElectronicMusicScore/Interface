@@ -1,19 +1,54 @@
-dell(() => {
+let _osmd;
 
+/**
+ * Loads a sheet into the viewer.
+ * @author Arnau Mora
+ * @since 20220408
+ * @param {string} url The path where the sheet is stored at.
+ */
+const loadSheet = (url) => {
+    console.info('Loading', url);
+    _osmd
+        .load(url)
+        .then(() => {
+            _osmd.render();
+
+            const iDrop = _('i-drop');
+            const iItem = _('i-item', iDrop);
+
+            iDrop.innerHTML = '';
+            const isms = _osmd.sheet.Instruments;
+            for (const k in isms) {
+                /**
+                 * @type {Instrument}
+                 */
+                const ins = isms[k];
+                const item = iItem.cloneNode(true);
+                cr(item, 'is-hidden');
+                ra(item, 'id');
+                qsa('[data-source="name"]', item).forEach((i) => st(i, ins.Name || ins.NameLabel.text));
+                qsa('input[type="checkbox"]', item).forEach((i) => sa(i, 'checked', 'true'));
+
+                el(item, 'change', (ev) => {
+                    ins.Visible = ev.target.checked;
+                    _osmd.render()
+                });
+
+                iDrop.appendChild(item);
+            }
+        });
+};
+
+dell(() => {
     // Load OSMD
-    const osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay("osmdContainer");
-    osmd.setOptions({
+    console.log("Initializing osmd...");
+    _osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay("osmdContainer");
+    _osmd.setOptions({
         backend: "canvas",
         drawTitle: true,
         // drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
     });
-    osmd
-        .load("/MozaVeilSample.xml")
-        .then(
-            function () {
-                osmd.render();
-            }
-        );
+    loadSheet("/MozaVeilSample.xml");
 
 
     // Get all "navbar-burger" elements
