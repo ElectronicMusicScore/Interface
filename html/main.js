@@ -8,6 +8,8 @@ let iDrop, iItem;
  * @param {string} filename The name of the file to load.
  */
 const loadSheet = (filename) => {
+    localStorage.setItem('sheet', filename);
+
     console.info('Loading', filename);
     _osmd
         .load("/file?path=" + filename)
@@ -45,7 +47,6 @@ const loadSheet = (filename) => {
                 qsa('input[type="checkbox"]', item).forEach((i) => i.checked = visible);
 
                 ins.Visible = visible;
-                console.log('Instrument label:', ins.NameLabel.text, 'insPrefs:', insPrefs, 'visible:', visible);
 
                 el(item, 'change', async (ev) => {
                     ins.Visible = ev.target.checked;

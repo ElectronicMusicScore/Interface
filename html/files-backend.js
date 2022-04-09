@@ -130,11 +130,10 @@ dell(async () => {
         }
         console.log("Finished loading", files.length, "files");
 
-        if (files.length > 0) {
-            const file = files[0].path;
-            console.log('Rendering sheet', file);
-            loadSheet(file);
-        }
+        if (localStorage.hasOwnProperty('sheet'))
+            loadSheet(localStorage.getItem('sheet'));
+        else if (files.length > 0)
+            loadSheet(files[0].path);
     }
 
     el(filesInput, 'change', (ev) => {
