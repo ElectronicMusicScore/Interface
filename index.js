@@ -205,6 +205,11 @@ app.patch('/rename', async (req, resp) => {
         fs.renameSync(fromFile, toFile);
         resp.status(200)
             .send('ok');
+        filesList.map((i) => {
+            if (i.path.includes(from))
+                i.path = to;
+            return i;
+        });
     } catch (e) {
         resp.status(500)
             .send('fail:internal');
