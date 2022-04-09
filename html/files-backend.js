@@ -76,10 +76,14 @@ dell(async () => {
                 st(i, nameNoExt);
                 // This gets called whenever the name of a file is changed.
                 el(i, 'focusout', async () => {
+                    const t = `${gt(i)}.${ext}`;
+                    if (t === filename)
+                        return;
+
                     const url = new URL('/rename', window.location.origin);
                     const rename = await fetch(url.toString(), {
                         method: 'PATCH',
-                        body: new URLSearchParams({FROM: filename, TO: `${gt(i)}.${ext}`}),
+                        body: new URLSearchParams({FROM: filename, TO: t}),
                     });
                     if (rename.ok)
                         await loadFiles();
