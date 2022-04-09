@@ -87,7 +87,8 @@ const initializeFilesList = () => {
         const stats = fs.lstatSync(filePath);
         const size = stats.size
         usedSpace += size;
-        filesList.push({path: `/${file}`, size});
+        if (!file.endsWith('.ins'))
+            filesList.push({path: `/${file}`, size});
     });
     if (availableSpace <= 0 || availableSpace < usedSpace)
         availableSpace = faker.datatype.number({min: usedSpace});
