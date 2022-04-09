@@ -460,5 +460,164 @@ paths:
                   value: 'fail:internal'
       operationId: get-config-key
       description: Fetches a value from the configuration from its key.
+  /config_sheet:
+    get:
+      summary: Fetch sheet configuration
+      tags: [ ]
+      responses:
+        '200':
+          description: 'The value of that preference. If value is list, each item will be in one row.'
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                instruments-example:
+                  value: Piano\nVoice
+        '400':
+          description: Some parameters were not set.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:missing-parameters'
+        '404':
+          description: 'The specified sheet at {file} does not exist.'
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:not-exist'
+        '405':
+          description: The key introduced is not valid. See parameter for valid options.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:invalid-key'
+        '406':
+          description: When there's no data about the set key in the sheet.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:no-data'
+        '500':
+          description: An unknown error happenned.
+          headers:
+            error-message:
+              schema:
+                type: string
+              description: A description about the error that happenned.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:internal'
+      operationId: get-config_sheet
+      description: Used for fetching user preferences on determined sheets.
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: file
+          description: The sheet file to update.
+          required: true
+        - schema:
+            type: string
+            enum:
+              - instruments
+          in: query
+          name: key
+          description: The property of the sheet to configure.
+          required: true
+    patch:
+      summary: Update sheet configuration
+      operationId: patch-config_sheet
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: ok
+        '400':
+          description: Some parameters were not set.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:missing-parameters'
+        '404':
+          description: The specified sheet file doesn't exist.
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:not-exist'
+        '405':
+          description: The key introduced is not valid.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:invalid-key'
+        '500':
+          description: An unknown error has occurred
+          headers:
+            error-message:
+              schema:
+                type: string
+              description: A description about the error that happenned.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:internal'
+      description: Used for updating the user preferences on a specific sheet.
+      parameters: [ ]
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: The sheet file to update.
+                key:
+                  type: string
+                  enum:
+                    - instruments
+                  description: The property of the sheet to configure.
+                value:
+                  type: string
+                  description: The value to set for the key
+              required:
+                - file
+                - key
+                - value
+        description: Must be URL-formatted. Used for setting which parameters to get.
 components:
   schemas: {}
