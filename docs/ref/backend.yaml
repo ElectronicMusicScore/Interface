@@ -180,6 +180,11 @@ paths:
               examples:
                 response:
                   value: 'fail:internal'
+          headers:
+            error-message:
+              schema:
+                type: string
+              description: A description about the error that happenned.
       description: Uploads a file into the filesystem.
       parameters: []
       requestBody:
@@ -234,6 +239,11 @@ paths:
               examples:
                 response:
                   value: 'fail:internal'
+          headers:
+            error-message:
+              schema:
+                type: string
+              description: A description about the error that happenned.
       description: Renames a file.
       requestBody:
         content:
@@ -313,6 +323,11 @@ paths:
               examples:
                 response:
                   value: 'fail:internal'
+          headers:
+            error-message:
+              schema:
+                type: string
+              description: A description about the error that happenned.
       description: 'Deletes the file at {path}.'
       tags:
         - filesystem
