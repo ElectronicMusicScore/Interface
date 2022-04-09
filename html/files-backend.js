@@ -95,7 +95,7 @@ dell(async () => {
             qsa('[data-source="load"]', card).forEach((i) => {
                 elc(i, (ev) => {
                     ec(ev);
-                    loadSheet("/file?path=" + filename);
+                    loadSheet(filename);
                     cm(_('flm'));
                 });
                 if (!filename.endsWithAny('xml', 'mxl', 'musicxml'))
@@ -133,7 +133,7 @@ dell(async () => {
         if (files.length > 0) {
             const file = files[0].path;
             console.log('Rendering sheet', file);
-            loadSheet(`file?path=${file}`);
+            loadSheet(file);
         }
     }
 

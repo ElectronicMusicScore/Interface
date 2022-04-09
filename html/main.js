@@ -5,12 +5,12 @@ let iDrop, iItem;
  * Loads a sheet into the viewer.
  * @author Arnau Mora
  * @since 20220408
- * @param {string} url The path where the sheet is stored at.
+ * @param {string} filename The name of the file to load.
  */
-const loadSheet = (url) => {
-    console.info('Loading', url);
+const loadSheet = (filename) => {
+    console.info('Loading', filename);
     _osmd
-        .load(url)
+        .load("/file?path=" + filename)
         .then(async () => {
             const isms = _osmd.sheet.Instruments;
 
@@ -21,7 +21,7 @@ const loadSheet = (url) => {
             let insPrefs = isms.map(i => i.NameLabel.text);
             const insUrl = new URL('/config_sheet', window.location.origin);
             insUrl.search = new URLSearchParams({
-                file: url.replace(/\/file\?path=/gm, ''),
+                file: filename,
                 key: 'instruments',
             })
             const insPrefsS = await fetch(insUrl.toString(), {method: 'GET'})
@@ -62,7 +62,7 @@ const loadSheet = (url) => {
                         {
                             method: 'PATCH',
                             body: new URLSearchParams({
-                                file: url.replace(/\/file\?path=/gm, ''),
+                                file: filename,
                                 key: 'instruments',
                                 value: instruments,
                             }),
