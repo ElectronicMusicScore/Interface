@@ -1,0 +1,358 @@
+openapi: 3.1.0
+info:
+  title: backend
+  version: '1.0'
+  summary: The API used by the Electronic Music Score interface to communicate with the hardware of the device.
+  contact:
+    name: Arnau Mora
+    url: 'https://arnyminerz.com'
+    email: arnyminer.z@gmail.com
+servers:
+  - url: 'http://localhost:3000'
+    description: Development Server
+paths:
+  /files:
+    get:
+      summary: Files list
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    description: A list of the files that are stored in the filesystem.
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                          description: The path of the file.
+                        size:
+                          type: number
+                          description: How much dooes the file weight in bytes.
+                      required:
+                        - path
+                        - size
+                required:
+                  - files
+              examples:
+                example-1:
+                  value:
+                    files:
+                      - path: /pants_drive_clothing.xz
+                        size: 59944
+                      - path: /personal.ssdl
+                        size: 37261
+                      - path: /operative_forward.msf
+                        size: 40468
+                    info:
+                      used: 137673
+                      max: 223553
+      operationId: get-files
+      description: Requests the list of files stored in the filesystem.
+  /nets:
+    get:
+      summary: Networks list
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  networks:
+                    type: array
+                    description: A list of the networks that are in range.
+                    items:
+                      type: object
+                      properties:
+                        ssid:
+                          type: string
+                          description: The SSID of the network found.
+      operationId: get-nets
+      description: Requests the device to search for all the available Wi-Fi networks.
+  '/connect/{ssid}':
+    parameters:
+      - schema:
+          type: string
+        name: ssid
+        in: path
+        required: true
+        description: The SSID of the network to connect to.
+    post:
+      summary: Wi-Fi Connect
+      operationId: post-connect-ssid
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: ok
+        '401':
+          description: 'The password is not correct, or it''s empty and the network requires authentication.'
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:auth-error'
+        '404':
+          description: 'The network specified doesn''t exist, or it''s out of range.'
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:out-of-range'
+        '500':
+          description: An unknown error has occurred.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:unknown-error'
+      description: Requests the device to connect to the network specified.
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: string
+            examples:
+              example:
+                value: pass=<password>
+  /upload:
+    put:
+      summary: File Upload
+      operationId: put-upload
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: ok
+        '400':
+          description: The request doesn't contain any files.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:no-form-files'
+        '406':
+          description: The was no file named "file" in the form data.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:no-file'
+        '500':
+          description: An internal error has occurred.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:internal'
+      description: Uploads a file into the filesystem.
+      parameters: [ ]
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                file:
+                  $ref: ''
+        description: '"file" must contain the data of the file to upload.'
+  /rename:
+    patch:
+      summary: File rename
+      operationId: patch-rename
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: ok
+        '404':
+          description: The source file doesn't exist.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:not-exist'
+        '406':
+          description: 'The target file already exists, and {force} is not set or false.'
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:exist'
+        '500':
+          description: An internal error has occurred.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:internal'
+      description: Renames a file.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                FROM:
+                  type: string
+                  description: The name of the original file.
+                TO:
+                  type: string
+                  description: The name of the target file.
+                FORCE:
+                  type: boolean
+                  description: Whether or not to replace the target file in case it already exists.
+                  default: false
+              required:
+                - FROM
+                - TO
+        description: The body must be URL-encoded.
+  '/{path}':
+    parameters:
+      - schema:
+          type: string
+        name: path
+        in: path
+        required: true
+    delete:
+      summary: Delete file
+      operationId: delete-path
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: ok
+        '400':
+          description: No path was introduced.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:missing-params'
+        '404':
+          description: Target file doesn't exist.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:not-exist'
+        '406':
+          description: The path introduced is a directory.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:is-directory'
+        '500':
+          description: An internal error occurred.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:internal'
+      description: 'Deletes the file at {path}.'
+  /ping:
+    get:
+      summary: Up check
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+      operationId: get-ping
+      description: Used for checking if the server is up and running.
+  /file:
+    get:
+      summary: File request
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: object
+                properties: { }
+        '400':
+          description: No path was introduced.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:missing-params'
+        '404':
+          description: The file requested doesn't exist.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:not-exist'
+      operationId: get-file
+      description: Requests a file from the filesystem
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: path
+          description: The path of the file to search for.
+          required: true
+components:
+  schemas: { }
