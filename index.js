@@ -129,7 +129,7 @@ app.post('/connect/:ssid', (req, resp) => {
     resp.status(result === 'ok' ? 200 : 400)
         .send(result);
 });
-app.post('/upload', async (req, res) => {
+app.put('/upload', async (req, res) => {
     try {
         if (!req.files)
             res.status(400)

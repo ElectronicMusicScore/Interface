@@ -123,7 +123,7 @@ dell(async () => {
                 console.error('Could not upload file. Status:', xhr.status);
         });
         xhr.addEventListener('error', console.error);
-        xhr.open('POST', '/upload', true);
+        xhr.open('PUT', '/upload', true);
         xhr.overrideMimeType(file.type);
         xhr.send(formData);
     });
