@@ -133,20 +133,24 @@ app.post('/connect/:ssid', (req, resp) => {
     console.log('Should connect to', ssid, 'with', password);
 
     let result;
+    let status = 200;
     if (faker.datatype.boolean())
         result = 'ok';
     else switch (generateRandom(2)) {
         case 0:
             result = 'fail:out-of-range';
+            status = 404;
             break;
         case 1:
             result = 'fail:auth-error';
+            status = 401;
             break;
         default:
             result = 'fail:unknown-error';
+            status = 500;
             break;
     }
-    resp.status(result === 'ok' ? 200 : 400)
+    resp.status(status)
         .send(result);
 });
 app.put('/upload', async (req, resp) => {

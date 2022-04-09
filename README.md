@@ -91,9 +91,9 @@ pass=<password>
 Responses:
 
 * `ok` (`200`): The device was connected successfully.
-* `fail:out-of-range` (`400`): The network is not in range.
-* `fail:auth-error` (`400`): Further authentication is required, or password is wrong.
-* `fail:unknown-error` (`400`): An unexpected error has occurred.
+* `fail:out-of-range` (`404`): The network is not in range.
+* `fail:auth-error` (`401`): Further authentication is required, or password is wrong.
+* `fail:unknown-error` (`500`): An unexpected error has occurred.
 
 #### `/upload` (<kbd>PUT</kbd>)
 
