@@ -355,6 +355,109 @@ app.get('/config/:key', (req, resp) => {
             .send('fail:internal');
     }
 });
+app.patch('/config_sheet', async (req, resp) => {
+    const body = req.body;
+
+    /**
+     * @type {string}
+     */
+    const file = body.file;
+    /**
+     * @type {string}
+     */
+    const key = body.key;
+    /**
+     * @type {string}
+     */
+    const value = body.value;
+
+    if (!file || !key || !value)
+        return resp
+            .status(400)
+            .send('fail:missing-parameters');
+
+    try {
+        const sheetFile = path.join(cacheFs, file);
+        if (!fs.existsSync(sheetFile))
+            return resp
+                .status(404)
+                .send('fail:not-exist');
+
+        switch (key) {
+            case 'instruments':
+                const fileName = path.join(cacheFs, file + '.ins');
+                const fileContents = value
+                    .replace(/,/gm, '\n');
+
+                if (fs.existsSync(fileName))
+                    fs.rmSync(fileName);
+
+                fs.writeFileSync(fileName, fileContents);
+
+                resp.status(200)
+                    .send('ok');
+                break;
+            default:
+                resp.status(405)
+                    .send('fail:invalid-key');
+                break;
+        }
+    } catch (e) {
+        resp.status(500)
+            .set('error-message', e)
+            .send('fail:internal');
+    }
+});
+app.get('/config_sheet', async (req, resp) => {
+    const query = req.query;
+
+    /**
+     * @type {string}
+     */
+    const file = query.file;
+    /**
+     * @type {string}
+     */
+    const key = query.key;
+
+    if (!file || !key)
+        return resp
+            .status(400)
+            .send('fail:missing-parameters');
+
+    try {
+        const sheetFile = path.join(cacheFs, file);
+        if (!fs.existsSync(sheetFile))
+            return resp
+                .status(404)
+                .send('fail:not-exist');
+
+        switch (key) {
+            case 'instruments':
+                const fileName = path.join(cacheFs, file + '.ins');
+
+                if (!fs.existsSync(fileName))
+                    return resp.status(406)
+                        .send('fail:no-data');
+
+                const fileContents = fs.readFileSync(fileName)
+                    .toString();
+
+                resp.status(200)
+                    .send(fileContents);
+
+                break;
+            default:
+                resp.status(405)
+                    .send('fail:invalid-key');
+                break;
+        }
+    } catch (e) {
+        resp.status(500)
+            .set('error-message', e)
+            .send('fail:internal');
+    }
+});
 
 app.listen(HTTP_PORT, () => {
     console.info(`Server available on: http://localhost:${HTTP_PORT}`);
