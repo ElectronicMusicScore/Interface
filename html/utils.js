@@ -25,3 +25,19 @@ const humanFileSize = (size, si = false, dp = 1) => {
 
     return size.toFixed(dp) + ' ' + units[u];
 }
+
+Object.assign(String.prototype, {
+    /**
+     * Checks whether the string ends with any of the suffixes.
+     * @author Arnau Mora
+     * @since 20220409
+     * @this {string}
+     * @param {string} suffixes The suffixes to check
+     */
+    endsWithAny(...suffixes) {
+        for (const s in suffixes)
+            if (this.endsWith(suffixes[s]))
+                return true;
+        return false;
+    }
+});
