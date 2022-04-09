@@ -72,7 +72,21 @@ dell(async () => {
             const card = filesCard.cloneNode(true);
             card.id = name.replace('.', '_');
             cr(card, 'is-hidden');
-            qsa('[data-source="filename"]', card).forEach((i) => st(i, nameNoExt));
+            qsa('[data-source="filename"]', card).forEach((i) => {
+                st(i, nameNoExt);
+                // This gets called whenever the name of a file is changed.
+                el(i, 'focusout', async () => {
+                    const url = new URL('/rename', window.location.origin);
+                    const rename = await fetch(url.toString(), {
+                        method: 'PATCH',
+                        body: new URLSearchParams({FROM: filename, TO: `${gt(i)}.${ext}`}),
+                    });
+                    if (rename.ok)
+                        await loadFiles();
+                    else
+                        console.error('Could not rename file. Code:', rename.status);
+                });
+            });
             qsa('[data-source="size"]', card).forEach((i) => st(i, humanFileSize(size)));
             qsa('[data-source="load"]', card).forEach((i) => {
                 elc(i, (ev) => {
