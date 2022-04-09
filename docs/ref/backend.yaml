@@ -435,7 +435,8 @@ paths:
         description: The key of the configuration value to fetch.
     get:
       summary: Get configuration value
-      tags: []
+      tags:
+        - configuration
       responses:
         '200':
           description: Returns the value of the config at key.
@@ -463,7 +464,9 @@ paths:
   /config_sheet:
     get:
       summary: Fetch sheet configuration
-      tags: [ ]
+      tags:
+        - configuration
+        - sheet
       responses:
         '200':
           description: 'The value of that preference. If value is list, each item will be in one row.'
@@ -619,5 +622,8 @@ paths:
                 - key
                 - value
         description: Must be URL-formatted. Used for setting which parameters to get.
+      tags:
+        - configuration
+        - sheet
 components:
   schemas: {}
