@@ -366,5 +366,84 @@ paths:
           name: path
           description: The path of the file to search for.
           required: true
+  '/config/{key}/{value}':
+    parameters:
+      - schema:
+          type: string
+        name: key
+        in: path
+        required: true
+        description: The key of the parameter to update.
+      - schema:
+          type: string
+        name: value
+        in: path
+        required: true
+        description: The value to set for the key.
+    patch:
+      summary: Set configuration value
+      operationId: patch-config-key-value
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: ok
+        '500':
+          description: When an unknown error occurs.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:internal'
+          headers:
+            error-message:
+              schema:
+                type: string
+              description: A description about the error that happenned.
+      tags:
+        - configuration
+      description: 'Updates the configuration value at {key} with {value}.'
+  '/config/{key}':
+    parameters:
+      - schema:
+          type: string
+        name: key
+        in: path
+        required: true
+        description: The key of the configuration value to fetch.
+    get:
+      summary: Get configuration value
+      tags: []
+      responses:
+        '200':
+          description: Returns the value of the config at key.
+          content:
+            application/json:
+              schema:
+                type: string
+                description: 'The value stored at {key}.'
+        '500':
+          description: When an unknown error has happenned.
+          headers:
+            error-message:
+              schema:
+                type: string
+              description: A description about the error that happenned.
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                response:
+                  value: 'fail:internal'
+      operationId: get-config-key
+      description: Fetches a value from the configuration from its key.
 components:
   schemas: {}
