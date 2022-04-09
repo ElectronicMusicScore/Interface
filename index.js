@@ -104,10 +104,10 @@ app.get('/file', (req, resp) => {
     const query = req.query;
     const queryPath = query.path;
     if (!queryPath)
-        return resp.status(400).send('error');
+        return resp.status(400).send('fail:missing-params');
     const filePath = path.join(cacheFs, queryPath);
     if (!fs.existsSync(filePath))
-        return resp.status(404).send('error');
+        return resp.status(404).send('fail:not-exist');
     const ext = path.extname(filePath);
     const type = mime.lookup(ext);
     const content = fs.readFileSync(filePath);
