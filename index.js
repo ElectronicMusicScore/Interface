@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const HTTP_PORT = process.env.HTTP_PORT || 3000;
 const fsPath = process.env.FS_PATH || './fs';
+const configPath = process.env.CONFIG_FILE || './config.yml';
 
 const express = require("express");
 const cors = require('cors');
@@ -21,6 +22,7 @@ const mime = require('mime-types');
 const {faker} = require('@faker-js/faker');
 
 const {generateRandom} = require('./utils');
+const {touch} = require('./fs-utils');
 
 const app = express();
 
@@ -281,6 +283,72 @@ app.delete('/:path', (req, resp) => {
             .send('ok');
     } catch (e) {
         resp.status(500)
+            .send('fail:internal');
+    }
+});
+app.patch('/config/:key/:value', async (req, resp) => {
+    const params = req.params;
+
+    /**
+     * @type {string}
+     */
+    const key = params.key;
+    /**
+     * @type {string}
+     */
+    const value = params.value;
+
+    try {
+        if (!fs.existsSync(configPath))
+            await touch(configPath)
+
+        fs.writeFileSync(
+            configPath,
+            fs.readFileSync(configPath)
+                .toString()
+                // Remove the line with that key
+                .replace(new RegExp(`^${key}=.*\n`, 'gm'), '')
+            + `${key}=${value}\n`,
+        );
+
+        resp.status(200)
+            .send('ok');
+    } catch (e) {
+        console.error(e);
+        resp.status(500)
+            .setHeader('error-message', e)
+            .send('fail:internal');
+    }
+});
+app.get('/config/:key', (req, resp) => {
+    const params = req.params;
+
+    /**
+     * @type {string}
+     */
+    const key = params.key;
+
+    try {
+        const line = fs.readFileSync(configPath)
+            .toString()
+            .match(new RegExp(`^${key}=.*\n`, 'gm'));
+
+        if (line == null || line.length <= 0)
+            return resp
+                .status(404)
+                .send('fail:not-set');
+
+        resp.status(200)
+            .send(
+                line[0]
+                    .toString()
+                    .replace(/\n/gm, '')
+                    .substring(key.length + 1)
+            );
+    } catch (e) {
+        console.error(e);
+        resp.status(500)
+            .setHeader('error-message', e)
             .send('fail:internal');
     }
 });
