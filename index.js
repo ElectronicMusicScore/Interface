@@ -8,7 +8,6 @@ const fsPath = process.env.FS_PATH || './fs';
 
 const express = require("express");
 const cors = require('cors');
-const bodyParser = require('body-parser');
 const busboy = require('connect-busboy');
 const fileUpload = require('express-fileupload');
 const morgan = require('morgan');
@@ -28,7 +27,7 @@ const app = express();
 // For parsing body data
 app.use(cors());
 app.use(busboy());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: true}));
 app.use(morgan('dev'));
 
 // enable files upload
@@ -165,7 +164,52 @@ app.put('/upload', async (req, resp) => {
         resp.status(500)
             .send('fail:internal');
     }
-})
+});
+app.patch('/rename', async (req, resp) => {
+    const body = req.body;
+    console.log('Body:', body);
+    /**
+     * @type {string}
+     */
+    const from = body['FROM'];
+    /**
+     * @type {string}
+     */
+    const to = body['TO'];
+    /**
+     * If true, and the target file already exists, it will be overridden.
+     * @type {boolean}
+     */
+    const force = body['FORCE'] || false;
+
+    if (!from || !to)
+        return resp
+            .status(400)
+            .send('fail:missing-params');
+    try {
+        const fromFile = path.join(cacheFs, from);
+        const toFile = path.join(cacheFs, to);
+
+        if (!fs.existsSync(fromFile))
+            return resp
+                .status(404)
+                .send('fail:not-exist');
+        if (fs.existsSync(toFile))
+            if (force)
+                fs.rmSync(toFile)
+            else
+                return resp
+                    .status(406)
+                    .send('fail:exist');
+
+        fs.renameSync(fromFile, toFile);
+        resp.status(200)
+            .send('ok');
+    } catch (e) {
+        resp.status(500)
+            .send('fail:internal');
+    }
+});
 
 app.listen(HTTP_PORT, () => {
     console.info(`Server available on: http://localhost:${HTTP_PORT}`);
