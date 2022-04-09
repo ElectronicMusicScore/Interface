@@ -129,6 +129,12 @@ dell(async () => {
             filesList.appendChild(card);
         }
         console.log("Finished loading", files.length, "files");
+
+        if (files.length > 0) {
+            const file = files[0].path;
+            console.log('Rendering sheet', file);
+            loadSheet(`file?path=${file}`);
+        }
     }
 
     el(filesInput, 'change', (ev) => {
