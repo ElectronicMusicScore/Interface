@@ -125,6 +125,15 @@ const vs = ($el, v) => $el.value = v;
 const st = ($el, t) => $el.innerText = t;
 
 /**
+ * Shortcut for getting `HTMLElement.innerText`.
+ * @author Arnau Mora
+ * @since 20220409
+ * @param {HTMLElement|Node} $el The element to get the text from.
+ * @return {string}
+ */
+const gt = ($el) => $el.innerText;
+
+/**
  * Shortcut for `window.event`.
  * @return {Event}
  */
