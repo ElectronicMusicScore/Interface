@@ -105,3 +105,20 @@ Responses:
 * `fail:no-form-files` (`400`): The request doesn't contain any files.
 * `fail:no-file` (`406`): There was no file named `file` in the data.
 * `fail:internal` (`500`): An internal error occurred.
+
+#### `/rename` (<kbd>PATCH</kbd>)
+
+Renames a file in the filesystem.
+
+Data:
+
+* `FROM` (`string`): The path where the original file is at.
+* `TO` (`string`): The path where to rename the original file.
+* `FORCE` (`bool`-optional): If true, the target file will be overridden if already exists.
+
+Responses:
+
+* `fail:missing-params` (`400`): If some required params were not found.
+* `fail:not-exist` (`404`): If the source file doesn't exist.
+* `fail:exist` (`406`): If the target file already exists, and `FORCE` is not set or `false`.
+* `fail:internal` (`500`): An internal error occurred.
