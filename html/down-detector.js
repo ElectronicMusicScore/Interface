@@ -25,7 +25,7 @@ dell(() => {
 
     window.setInterval(async () => {
         try {
-            const s = await checkServer('/ping', 100);
+            const s = await checkServer('/ping', 1000);
             if (s == null || !s.ok)
                 cr(sdn, 'is-hidden');
             else
@@ -33,5 +33,5 @@ dell(() => {
         } catch (e) {
             cr(sdn, 'is-hidden');
         }
-    }, 1000);
+    }, 3000);
 });
