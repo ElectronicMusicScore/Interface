@@ -14,6 +14,21 @@ dell(async () => {
      * @type {HTMLProgressElement}
      */
     const filesUsage = _('files-spc');
+    /**
+     * The file input for uploading new files to the filesystem.
+     * @type {HTMLInputElement}
+     */
+    const filesInput = _('files-upload');
+    /**
+     * The display name of the introduced file before uploading.
+     * @type {HTMLElement}
+     */
+    const filesName = _('files-name');
+    /**
+     * The progress bar that shows the upload task percent.
+     * @type {HTMLProgressElement}
+     */
+    const filesUpload = _('files-prog');
 
     // Set initial state for modal
     cr(_('flm'), 'is-active');
@@ -44,6 +59,7 @@ dell(async () => {
         cr(filesUsage, 'is-info', 'is-success', 'is-warning', 'is-danger');
         ca(filesUsage, used < 30 ? 'is-info' : used < 50 ? 'is-success' : used < 80 ? 'is-warning' : 'is-danger');
 
+        filesList.innerHTML = '';
         for (const f in files) {
             const file = files[f];
             const filename = file.path;
@@ -67,5 +83,50 @@ dell(async () => {
             filesList.appendChild(card);
         }
     }
+
+    el(filesInput, 'change', (ev) => {
+        ec(ev); // Consume event
+        const $tg = ev.target;
+        if ($tg.files.length <= 0) {
+            ca(filesUpload, 'is-hidden');
+            ca(filesName, 'is-hidden');
+            return;
+        }
+        const file = $tg.files[0];
+        cr(filesUpload, 'is-hidden');
+        st(filesName, file.name);
+        cr(filesName, 'is-hidden');
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        console.log('Uploading ' + file.name + '...');
+
+        const xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener('progress', (ev) => {
+            if (ev.lengthComputable) {
+                const progress = (ev.loaded / ev.total) * 100;
+                console.log('Upload progress:', progress, '%');
+                filesUpload.value = progress;
+            }
+        });
+        xhr.addEventListener('loadend', async () => {
+            // Tells whether the upload was successful
+            const suc = xhr.readyState === 4 && xhr.status === 200;
+
+            if (suc) {
+                ca(filesUpload, 'is-hidden');
+                ca(filesName, 'is-hidden');
+                $tg.file = null;
+                await loadFiles();
+            } else
+                console.error('Could not upload file. Status:', xhr.status);
+        });
+        xhr.addEventListener('error', console.error);
+        xhr.open('POST', '/upload', true);
+        xhr.overrideMimeType(file.type);
+        xhr.send(formData);
+    });
+
     await loadFiles();
 });

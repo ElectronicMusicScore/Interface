@@ -7,7 +7,13 @@ const HTTP_PORT = process.env.HTTP_PORT || 3000;
 const fsPath = process.env.FS_PATH || './fs';
 
 const express = require("express");
+const cors = require('cors');
 const bodyParser = require('body-parser');
+const busboy = require('connect-busboy');
+const fileUpload = require('express-fileupload');
+const morgan = require('morgan');
+require('lodash');
+
 const path = require('path');
 const fs = require('fs');
 const fse = require('fs-extra');
@@ -20,7 +26,15 @@ const {generateRandom} = require('./utils');
 const app = express();
 
 // For parsing body data
-app.use(bodyParser.urlencoded());
+app.use(cors());
+app.use(busboy());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(morgan('dev'));
+
+// enable files upload
+app.use(fileUpload({
+    createParentPath: true
+}));
 
 // The opensheetmusicdisplay script
 app.use(
@@ -44,6 +58,9 @@ if (fs.existsSync(cacheFs))
     fs.rmSync(cacheFs, {recursive: true, force: true});
 fse.copySync(fsPath, cacheFs, {});
 
+/**
+ * @type {{path:string,size:number}[]}
+ */
 let filesList = [];
 let usedSpace = 0;
 fs.readdirSync(cacheFs).forEach((file) => {
@@ -112,6 +129,47 @@ app.post('/connect/:ssid', (req, resp) => {
     resp.status(result === 'ok' ? 200 : 400)
         .send(result);
 });
+app.post('/upload', async (req, res) => {
+    try {
+        if (!req.files)
+            res.status(400)
+                .send({
+                    status: false,
+                    message: 'No file uploaded',
+                });
+        else {
+            let file = req.files.file;
+            /**
+             * @type {string}
+             */
+            const name = file.name;
+            /**
+             * @type {number}
+             */
+            const size = file.size;
+
+            file.mv(path.join(cacheFs, name));
+
+            //send response
+            res.send({
+                status: true,
+                message: 'File is uploaded',
+                data: {
+                    name: name,
+                    mimetype: file.mimetype,
+                    size: size,
+                },
+            });
+
+            // Store new file in cache
+            filesList.push({path: name, size});
+            usedSpace += size;
+            console.log('New files list:', filesList);
+        }
+    } catch (err) {
+        res.status(500).send(err);
+    }
+})
 
 app.listen(HTTP_PORT, () => {
     console.info(`Server available on: http://localhost:${HTTP_PORT}`);
