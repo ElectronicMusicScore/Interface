@@ -129,16 +129,18 @@ app.post('/connect/:ssid', (req, resp) => {
     resp.status(result === 'ok' ? 200 : 400)
         .send(result);
 });
-app.put('/upload', async (req, res) => {
+app.put('/upload', async (req, resp) => {
     try {
         if (!req.files)
-            res.status(400)
-                .send({
-                    status: false,
-                    message: 'No file uploaded',
-                });
+            resp.status(400)
+                .send('fail:no-form-files');
         else {
             let file = req.files.file;
+            if (!file)
+                return resp
+                    .status(406)
+                    .send('fail:no-file');
+
             /**
              * @type {string}
              */
@@ -151,15 +153,8 @@ app.put('/upload', async (req, res) => {
             file.mv(path.join(cacheFs, name));
 
             //send response
-            res.send({
-                status: true,
-                message: 'File is uploaded',
-                data: {
-                    name: name,
-                    mimetype: file.mimetype,
-                    size: size,
-                },
-            });
+            resp.status(200)
+                .send('ok');
 
             // Store new file in cache
             filesList.push({path: name, size});
@@ -167,7 +162,8 @@ app.put('/upload', async (req, res) => {
             console.log('New files list:', filesList);
         }
     } catch (err) {
-        res.status(500).send(err);
+        resp.status(500)
+            .send('fail:internal');
     }
 })
 
