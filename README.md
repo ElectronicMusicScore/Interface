@@ -18,6 +18,14 @@ and their default values are:
 ```dotenv
 # The port number for the web server
 HTTP_PORT=3000
+
+# The path where the emulated permanent filesystem is at. This directory won't be
+# modified. A copy will be generated named "FS_PATH.cache", and the changes made
+# will be lost when rebooting the server.
+FS_PATH=./fs
+
+# The file where to store the configuration at
+CONFIG_FILE=config.yml
 ```
 
 ### Start
