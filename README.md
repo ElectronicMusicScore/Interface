@@ -88,9 +88,20 @@ Requests the device to connect to the Wi-Fi network with SSID `ssid`. Requires t
 pass=<password>
 ```
 
-Response can be:
+Responses:
 
 * `ok` (`200`): The device was connected successfully.
 * `fail:out-of-range` (`400`): The network is not in range.
 * `fail:auth-error` (`400`): Further authentication is required, or password is wrong.
 * `fail:unknown-error` (`400`): An unexpected error has occurred.
+
+#### `/upload` (<kbd>PUT</kbd>)
+
+Uploads a file into the filesystem. The file must be named `file` in the form data.
+
+Responses:
+
+* `ok` (`200`): The upload was successful.
+* `fail:no-form-files` (`400`): The request doesn't contain any files.
+* `fail:no-file` (`406`): There was no file named `file` in the data.
+* `fail:internal` (`500`): An internal error occurred.
