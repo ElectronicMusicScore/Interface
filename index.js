@@ -189,6 +189,7 @@ app.put('/upload', async (req, resp) => {
         }
     } catch (err) {
         resp.status(500)
+            .setHeader('error-message', err)
             .send('fail:internal');
     }
 });
@@ -239,6 +240,7 @@ app.patch('/rename', async (req, resp) => {
         });
     } catch (e) {
         resp.status(500)
+            .setHeader('error-message', e)
             .send('fail:internal');
     }
 });
@@ -283,6 +285,7 @@ app.delete('/:path', (req, resp) => {
             .send('ok');
     } catch (e) {
         resp.status(500)
+            .setHeader('error-message', e)
             .send('fail:internal');
     }
 });
