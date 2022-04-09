@@ -259,6 +259,7 @@ app.delete('/:path', (req, resp) => {
                 .send('fail:missing-params');
 
         const filePath = path.join(cacheFs, file);
+        const insFilePath = path.join(cacheFs, file + '.ins');
 
         if (!fs.existsSync(filePath))
             return resp
@@ -273,7 +274,10 @@ app.delete('/:path', (req, resp) => {
                 .send('fail:is-directory');
 
         // Remove the file
-        fs.rmSync(filePath)
+        fs.rmSync(filePath);
+
+        if (fs.existsSync(insFilePath))
+            fs.rmSync(insFilePath);
 
         if (fs.existsSync(filePath))
             return resp
