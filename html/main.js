@@ -11,29 +11,72 @@ const loadSheet = (url) => {
     console.info('Loading', url);
     _osmd
         .load(url)
-        .then(() => {
-            _osmd.render();
+        .then(async () => {
+            const isms = _osmd.sheet.Instruments;
+
+            // noinspection SpellCheckingInspection
+            /**
+             * @type {string[]}
+             */
+            let insPrefs = isms.map(i => i.NameLabel.text);
+            const insUrl = new URL('/config_sheet', window.location.origin);
+            insUrl.search = new URLSearchParams({
+                file: url.replace(/\/file\?path=/gm, ''),
+                key: 'instruments',
+            })
+            const insPrefsS = await fetch(insUrl.toString(), {method: 'GET'})
+            if (insPrefsS.ok)
+                insPrefs = (await insPrefsS.text())
+                    .toString()
+                    .split(/\n/gm);
 
             iDrop.innerHTML = '';
-            const isms = _osmd.sheet.Instruments;
             for (const k in isms) {
                 /**
                  * @type {Instrument}
                  */
                 const ins = isms[k];
                 const item = iItem.cloneNode(true);
+                const visible = insPrefs.includes(ins.NameLabel.text);
+
                 cr(item, 'is-hidden');
                 ra(item, 'id');
                 qsa('[data-source="name"]', item).forEach((i) => st(i, ins.Name || ins.NameLabel.text));
-                qsa('input[type="checkbox"]', item).forEach((i) => sa(i, 'checked', 'true'));
+                qsa('input[type="checkbox"]', item).forEach((i) => i.checked = visible);
 
-                el(item, 'change', (ev) => {
+                ins.Visible = visible;
+                console.log('Instrument label:', ins.NameLabel.text, 'insPrefs:', insPrefs, 'visible:', visible);
+
+                el(item, 'change', async (ev) => {
                     ins.Visible = ev.target.checked;
-                    _osmd.render()
+                    _osmd.render();
+
+                    // Update the configuration at server
+                    const instruments = _osmd.sheet
+                        .Instruments
+                        .map(item => item.Visible ? item.NameLabel.text : null)
+                        .filter(i => i != null)
+                        .join(',');
+                    const result = await fetch(
+                        '/config_sheet',
+                        {
+                            method: 'PATCH',
+                            body: new URLSearchParams({
+                                file: url.replace(/\/file\?path=/gm, ''),
+                                key: 'instruments',
+                                value: instruments,
+                            }),
+                        },
+                    )
+                    if (!result.ok)
+                        // TODO: Show error on GUI
+                        console.error('Could not update config on instrument preferences. Code:', result.status);
                 });
 
                 iDrop.appendChild(item);
             }
+
+            _osmd.render();
         });
 };
 
