@@ -98,9 +98,33 @@ dell(async () => {
                     // Hide button if not a MusicXML file
                     ca(i, 'is-hidden');
             });
+            qsa('[data-source="delete"]', card).forEach((i) => {
+                elc(i, async (ev) => {
+                    ec(ev);
+                    if (i.classList.contains('has-text-danger')) {
+                        const url = new URL('/' + encodeURIComponent(filename), window.location.origin);
+                        const deletion = await fetch(url.toString(), {method: 'DELETE'});
+                        if (!deletion.ok)
+                            // TODO: Show error in GUI
+                            console.error('Could not delete. Status:', deletion.status);
+                        else {
+                            console.log('File deleted!');
+                            await loadFiles();
+                        }
+                    } else {
+                        ca(i, 'has-text-danger');
+                        st(i, 'Confirm');
+                    }
+                });
+                el(i, 'focusout', () => {
+                    cr(i, 'has-text-danger');
+                    st(i, 'Delete');
+                });
+            });
 
             filesList.appendChild(card);
         }
+        console.log("Finished loading", files.length, "files");
     }
 
     el(filesInput, 'change', (ev) => {

@@ -61,15 +61,36 @@ fse.copySync(fsPath, cacheFs, {});
  * @type {{path:string,size:number}[]}
  */
 let filesList = [];
+/**
+ * Stores the amount of space used in the filesystem.
+ * @type {number}
+ */
 let usedSpace = 0;
-fs.readdirSync(cacheFs).forEach((file) => {
-    const filePath = path.join(cacheFs, file);
-    const stats = fs.lstatSync(filePath);
-    const size = stats.size
-    usedSpace += size;
-    filesList.push({path: `/${file}`, size});
-});
-const availableSpace = faker.datatype.number({min: usedSpace});
+/**
+ * Stores the available space in the filesystem. Obviously must be greater than `usedSpace`.
+ * @type {number}
+ */
+let availableSpace = 0;
+
+/**
+ * Initializes the list at `filesList`.
+ * @author Arnau Mora
+ * @since 20220409
+ */
+const initializeFilesList = () => {
+    usedSpace = 0;
+    filesList = [];
+    fs.readdirSync(cacheFs).forEach((file) => {
+        const filePath = path.join(cacheFs, file);
+        const stats = fs.lstatSync(filePath);
+        const size = stats.size
+        usedSpace += size;
+        filesList.push({path: `/${file}`, size});
+    });
+    if (availableSpace <= 0 || availableSpace < usedSpace)
+        availableSpace = faker.datatype.number({min: usedSpace});
+}
+initializeFilesList();
 
 // Emulate the device endpoints
 app.get('/ping', (req, resp) => resp.status(200).send('ok'));
@@ -210,6 +231,50 @@ app.patch('/rename', async (req, resp) => {
                 i.path = to;
             return i;
         });
+    } catch (e) {
+        resp.status(500)
+            .send('fail:internal');
+    }
+});
+app.delete('/:path', (req, resp) => {
+    try {
+        const params = req.params;
+        /**
+         * @type {string}
+         */
+        const file = params.path;
+
+        if (file == null)
+            return resp
+                .status(400)
+                .send('fail:missing-params');
+
+        const filePath = path.join(cacheFs, file);
+
+        if (!fs.existsSync(filePath))
+            return resp
+                .status(404)
+                .send('fail:not-exist');
+
+        const fileInfo = fs.statSync(filePath);
+
+        if (fileInfo.isDirectory())
+            return resp
+                .status(406)
+                .send('fail:is-directory');
+
+        // Remove the file
+        fs.rmSync(filePath)
+
+        if (fs.existsSync(filePath))
+            return resp
+                .status(500)
+                .send('fail:internal');
+
+        initializeFilesList();
+
+        resp.status(200)
+            .send('ok');
     } catch (e) {
         resp.status(500)
             .send('fail:internal');
