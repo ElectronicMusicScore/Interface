@@ -1,5 +1,5 @@
 let _osmd;
-let iDrop, iItem;
+let iDrop, iItem, iList;
 let scale = 1.0;
 
 /**
@@ -32,6 +32,11 @@ const loadSheet = (filename) => {
                 insPrefs = (await insPrefsS.text())
                     .toString()
                     .split(/\n/gm);
+
+            if (isms.length <= 1)
+                ca(iList, 'is-hidden');
+            else
+                cr(iList, 'is-hidden');
 
             iDrop.innerHTML = '';
             for (const k in isms) {
@@ -86,6 +91,7 @@ dell(() => {
     // Initialize instruments dropdown
     iDrop = _('i-drop');
     iItem = _('i-item', iDrop);
+    iList = _('insments');
 
     // Load OSMD
     console.log("Initializing osmd...");
