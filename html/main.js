@@ -1,5 +1,6 @@
 let _osmd;
 let iDrop, iItem;
+let scale = 1.0;
 
 /**
  * Loads a sheet into the viewer.
@@ -90,9 +91,23 @@ dell(() => {
     console.log("Initializing osmd...");
     _osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay("osmdContainer");
     _osmd.setOptions({
-        backend: "canvas",
+        backend: "SVG", // or canvas
         drawTitle: true,
         // drawingParameters: "compacttight" // don't display title, composer etc., smaller margins
+    });
+
+    const refreshZoom = () => {
+        _osmd.Zoom = scale;
+        _osmd.render();
+    }
+
+    elc(_('zoom-in'), () => {
+        scale *= 1.2;
+        refreshZoom();
+    });
+    elc(_('zoom-out'), () => {
+        scale /= 1.2;
+        refreshZoom();
     });
 
 
