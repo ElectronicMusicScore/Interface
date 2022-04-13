@@ -148,8 +148,10 @@ dell(() => {
     };
 
     _('flm').addEventListener('modal_open', (ev) => {
-        if (btServer == null || !btServer.connected)
-            return ev.preventDefault();
+        if (btServer == null || !btServer.connected) {
+            ev.preventDefault();
+            snackbar('Not connected');
+        }
     });
 
     // Check bluetooth compatibility
