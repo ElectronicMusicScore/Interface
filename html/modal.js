@@ -12,7 +12,7 @@
  * Open Modal. Opens the modal at element `$el`.
  * @author Arnau Mora
  * @since 20220407
- * @param $el
+ * @param {HTMLElement} $el
  */
 const om = ($el) => ca($el, 'is-active');
 
@@ -20,9 +20,14 @@ const om = ($el) => ca($el, 'is-active');
  * Close Modal. Hides the modal at element `$el`.
  * @author Arnau Mora
  * @since 20220407
- * @param $el
+ * @param {HTMLElement} $el
  */
-const cm = ($el) => cr($el, 'is-active');
+const cm = ($el) => {
+    console.log('$el:', $el);
+    if ($el.hasAttribute('data-modal-force'))
+        return;
+    cr($el, 'is-active')
+};
 
 dell(() => {
     /**
