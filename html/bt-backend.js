@@ -228,10 +228,12 @@ dell(() => {
                 }
             } else {
                 console.error('There was an error while connecting.');
+                snackbar('Could not connect. More info in the console.');
                 setBtState(btState.DISCONNECTED);
             }
         } catch (e) {
             console.error('Could not perform bt operation. Error:', e);
+            snackbar('Could not connect. More info in the console.');
             setBtState(btState.DISCONNECTED);
         }
     });
