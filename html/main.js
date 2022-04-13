@@ -9,6 +9,9 @@ let scale = 1.0;
  * @param {string} filename The name of the file to load.
  */
 const loadSheet = (filename) => {
+    if (_osmd == null)
+        return;
+
     localStorage.setItem('sheet', filename);
 
     console.info('Loading', filename);
