@@ -119,7 +119,6 @@ dell(() => {
         const characteristics = await service.getCharacteristics();
         for (const char of characteristics) {
             let value = char.properties.read ? await char.readValue() : null;
-            console.log('value:', value);
 
             switch (char.uuid) {
                 case BluetoothUUID.getCharacteristic(BT_DATA_STORAGE_AVAILABLE_UUID):
@@ -142,6 +141,7 @@ dell(() => {
                     break;
                 default:
                     console.log('Char:', char);
+                    console.log('Value:', value);
                     break;
             }
         }
