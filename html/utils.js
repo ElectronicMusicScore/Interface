@@ -39,5 +39,17 @@ Object.assign(String.prototype, {
             if (this.endsWith(suffixes[s]))
                 return true;
         return false;
+    },
+    /**
+     * Splits a given string at the specified index.
+     * @author Arnau Mora
+     * @since 20220414
+     * @this {string}
+     * @param {number} index The position where to split at.
+     * @returns {string[]}
+     * @see {string.split}
+     */
+    splitAt(index) {
+        return [this.substring(0, index), this.substring(index + 1)];
     }
 });
