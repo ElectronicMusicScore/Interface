@@ -7,6 +7,22 @@
  * @file modal.js
  */
 
+/**
+ * An event that gets called whenever a modal gets opened through `om`.
+ * @author Arnau Mora
+ * @since 20220413
+ * @type {Event}
+ */
+const modalOpenEvent = new Event('modal_open', {cancelable: true});
+
+/**
+ * An event that gets called whenever a modal gets closed through `cm`.
+ * @author Arnau Mora
+ * @since 20220413
+ * @type {Event}
+ */
+const modalCloseEvent = new Event('modal_close', {cancelable: true});
+
 // Functions to open and close a modal
 /**
  * Open Modal. Opens the modal at element `$el`.
@@ -14,7 +30,10 @@
  * @since 20220407
  * @param {HTMLElement} $el
  */
-const om = ($el) => ca($el, 'is-active');
+const om = ($el) => {
+    if ($el.dispatchEvent(modalOpenEvent))
+        ca($el, 'is-active');
+};
 
 /**
  * Close Modal. Hides the modal at element `$el`.
@@ -26,7 +45,8 @@ const om = ($el) => ca($el, 'is-active');
 const cm = ($el, force = false) => {
     if (!force && $el.hasAttribute('data-modal-force'))
         return;
-    cr($el, 'is-active');
+    if ($el.dispatchEvent(modalCloseEvent))
+        cr($el, 'is-active');
 };
 
 dell(() => {
