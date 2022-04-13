@@ -99,7 +99,7 @@ dell(() => {
                         level < (100 / 7 * 5) ? 'battery_4_bar' : level < 100 ? 'battery_6_bar' : 'battery_full'
             );
         }
-    }
+    };
 
     const updateUsedSpace = async () => {
         if (btServer == null) {
@@ -145,7 +145,12 @@ dell(() => {
                     break;
             }
         }
-    }
+    };
+
+    _('flm').addEventListener('modal_open', (ev) => {
+        if (btServer == null || !btServer.connected)
+            return ev.preventDefault();
+    });
 
     // Check bluetooth compatibility
     try {
@@ -178,7 +183,7 @@ dell(() => {
     }
 
     elc(_('bt-conn'), async () => {
-        if (btServer != null)
+        if (btServer != null || btServer?.connected)
             return;
 
         setBtState(btState.CONNECTING);
