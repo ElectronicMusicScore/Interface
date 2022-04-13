@@ -55,6 +55,15 @@ const BT_DATA_STORAGE_AVAILABLE_UUID = 0x2B98;
 const BT_DAT_STORAGE_USED_UUID = 0x2B99;
 
 /**
+ * The UUID of the files list characteristic.
+ * @author Arnau Mora
+ * @since 20220413
+ * @type {number}
+ * @see {BT_SERVICE_DATA}
+ */
+const BT_DATA_STORAGE_LIST_UUID = 0x2ACB;
+
+/**
  * The UUID of the battery level characteristic.
  * @author Arnau Mora
  * @since 20220413
@@ -101,6 +110,13 @@ dell(() => {
         }
     };
 
+    const bin2String = (array) => {
+        let result = "";
+        for (let i = 0; i < array.length; i++)
+            result += String.fromCharCode(parseInt(array[i], 2));
+        return result;
+    }
+
     const updateUsedSpace = async () => {
         if (btServer == null) {
             console.error('Could not update device\'s used space: Not connected');
@@ -138,6 +154,23 @@ dell(() => {
                     cr(filesUsage, 'is-info', 'is-success', 'is-warning', 'is-danger');
                     ca(filesUsage, spaceUsed < 30 ? 'is-info' : spaceUsed < 50 ? 'is-success' : spaceUsed < 80 ? 'is-warning' : 'is-danger');
 
+                    break;
+                case BluetoothUUID.getCharacteristic(BT_DATA_STORAGE_LIST_UUID):
+                    if (!("TextDecoder" in window))
+                        // TODO: This should be improved
+                        alert("Sorry, this browser does not support TextEncoder...");
+
+                    const enc = new TextDecoder('utf-8');
+                    const filesListRaw = enc.decode(value.buffer)
+                        .trimEnd()
+                        .split('\n');
+                    let filesList = [];
+                    filesListRaw.forEach((i) => {
+                        const split = i.splitAt(i.indexOf('\r'));
+                        if (split[0].length > 0)
+                            filesList.push({name: split[0], size: split[1].charCodeAt(0)})
+                    });
+                    console.log('Files list:', filesList);
                     break;
                 default:
                     console.log('Char:', char);
