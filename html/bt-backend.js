@@ -99,16 +99,34 @@ dell(() => {
     }
 
     // Check bluetooth compatibility
-    if (navigator.bluetooth != null) {
+    try {
         navigator.bluetooth
             .getAvailability()
             .then(available => {
                 if (available)
                     cm(_('dim'), true);
-                else
+                else {
+                    const userAgent = navigator.userAgent;
+                    const chromeIndex = userAgent.indexOf('Chrome/');
+                    if (chromeIndex >= 0) {
+                        const versionStr = userAgent.substring(chromeIndex + 7, userAgent.indexOf('.', chromeIndex));
+                        if (versionStr.length > 0) {
+                            const version = parseInt(versionStr);
+                            if (version >= 85) {
+                                sh(_('bt-reason'), 'It\'s required that you enable Bluetooth compatibility on this device. Please, access Chrome flags at <a href="chrome://flags">chrome://flags</a> and enable <code>#enable-web-bluetooth-new-permissions-backend</code> and <code>#enable-experimental-web-platform-features</code>. Then, refresh this page.');
+                                return console.error('Chrome flag needs to be enabled.');
+                            }
+                        }
+                    }
+
                     console.error('Bluetooth not available.');
+                    st(_('bt-reason'), 'Bluetooth service is not available');
+                }
             });
-    } else return console.error('Navigator not compatible with Bluetooth.');
+    } catch (e) {
+        sh(_('bt-reason'), 'Browser is not compatible with Bluetooth. Check the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API#browser_compatibility">Browser Compatibility Table</a>, and choose another one depending on your platform.');
+        return console.error('Navigator not compatible with Bluetooth.');
+    }
 
     elc(_('bt-conn'), async () => {
         if (btId != null)
