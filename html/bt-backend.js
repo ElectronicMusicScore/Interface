@@ -1,7 +1,10 @@
 /**
- * The ID of the bluetooth device to connect to.
+ * The Bluetooth server that the device is currently connected to.
+ * @author Arnau Mora
+ * @since 20220413
+ * @private
  */
-let btId;
+let btServer;
 
 /**
  * Determines the current connection state of the Bluetooth service.
@@ -98,6 +101,52 @@ dell(() => {
         }
     }
 
+    const updateUsedSpace = async () => {
+        if (btServer == null) {
+            console.error('Could not update device\'s used space: Not connected');
+            return;
+        }
+
+        if (!btServer.connected)
+            await btServer.device.gatt.connect();
+
+        if (!btServer.connected) {
+            console.error('Could not connect to the Bluetooth server.');
+            return;
+        }
+
+        const service = await btServer.getPrimaryService(BT_SERVICE_DATA);
+        const characteristics = await service.getCharacteristics();
+        for (const char of characteristics) {
+            let value = char.properties.read ? await char.readValue() : null;
+            console.log('value:', value);
+
+            switch (char.uuid) {
+                case BluetoothUUID.getCharacteristic(BT_DATA_STORAGE_AVAILABLE_UUID):
+                    const spaceAvailable = new DataView(value.buffer, value.byteOffset).getUint32(0, true);
+                    console.log('Space available:', spaceAvailable);
+                    st(_('files-avail'), humanFileSize(spaceAvailable));
+                    break;
+                case BluetoothUUID.getCharacteristic(BT_DAT_STORAGE_USED_UUID):
+                    const spaceUsed = new DataView(value.buffer, value.byteOffset).getUint32(0, true);
+                    console.log('Space used:', spaceUsed);
+
+                    const filesUsed = _('files-used');
+                    const filesUsage = _('files-spc');
+
+                    st(filesUsed, humanFileSize(spaceUsed));
+                    vs(filesUsage, spaceUsed);
+                    cr(filesUsage, 'is-info', 'is-success', 'is-warning', 'is-danger');
+                    ca(filesUsage, spaceUsed < 30 ? 'is-info' : spaceUsed < 50 ? 'is-success' : spaceUsed < 80 ? 'is-warning' : 'is-danger');
+
+                    break;
+                default:
+                    console.log('Char:', char);
+                    break;
+            }
+        }
+    }
+
     // Check bluetooth compatibility
     try {
         navigator.bluetooth
@@ -129,7 +178,7 @@ dell(() => {
     }
 
     elc(_('bt-conn'), async () => {
-        if (btId != null)
+        if (btServer != null)
             return;
 
         setBtState(btState.CONNECTING);
@@ -146,29 +195,9 @@ dell(() => {
             if (server.connected) {
                 console.log('Connected successfully');
                 setBtState(btState.CONNECTED);
-                btId = server.device.id;
-                localStorage.setItem('bt_id', btId);
+                btServer = server;
 
-                const service = await server.getPrimaryService(BT_SERVICE_DATA);
-                const characteristics = await service.getCharacteristics();
-                for (const char of characteristics) {
-                    let value = char.properties.read ? await char.readValue() : null;
-                    console.log('value:', value);
-
-                    switch (char.uuid) {
-                        case BluetoothUUID.getCharacteristic(BT_DATA_STORAGE_AVAILABLE_UUID):
-                            const spaceAvailable = new DataView(value.buffer, value.byteOffset);
-                            console.log('Space available:', spaceAvailable.getUint32(0, true));
-                            break;
-                        case BluetoothUUID.getCharacteristic(BT_DAT_STORAGE_USED_UUID):
-                            const spaceUsed = new DataView(value.buffer, value.byteOffset);
-                            console.log('Space used:', spaceUsed.getUint32(0, true));
-                            break;
-                        default:
-                            console.log('Char:', char);
-                            break;
-                    }
-                }
+                await updateUsedSpace();
 
                 const battService = await server.getPrimaryService(BT_SERVICE_BATT);
                 const battChars = await battService.getCharacteristics();
