@@ -19,6 +19,10 @@ and their default values are:
 # The port number for the web server
 HTTP_PORT=3000
 
+# The port for the HTTPS server, note that SSL_KEY_FILE and SSL_CER_FILE should
+# also exist, or the https server won't boot up.
+HTTPS_PORT=3001
+
 # The path where the emulated permanent filesystem is at. This directory won't be
 # modified. A copy will be generated named "FS_PATH.cache", and the changes made
 # will be lost when rebooting the server.
@@ -26,6 +30,12 @@ FS_PATH=./fs
 
 # The file where to store the configuration at
 CONFIG_FILE=config.yml
+
+# The path where the SSL cert key is stored at
+SSL_KEY_FILE=ssl/server.key
+
+# The path where the SSL cert is stored at
+SSL_CER_FILE=ssl/server.cert
 ```
 
 ### Start

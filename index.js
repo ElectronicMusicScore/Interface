@@ -4,9 +4,13 @@ console.warn("Warning! Do not use in production. Testing server.");
 require('dotenv').config();
 
 const HTTP_PORT = process.env.HTTP_PORT || 3000;
+const HTTPS_PORT = process.env.HTTPS_PORT || 3001;
 const fsPath = process.env.FS_PATH || './fs';
 const configPath = process.env.CONFIG_FILE || './config.yml';
+const SSL_KEY_FILE = process.env.SSL_KEY_FILE || 'ssl/server.key';
+const SSL_CER_FILE = process.env.SSL_CER_FILE || 'ssl/server.cert';
 
+const https = require('https');
 const express = require("express");
 const cors = require('cors');
 const busboy = require('connect-busboy');
@@ -425,3 +429,13 @@ app.get('/config_sheet', async (req, resp) => {
 app.listen(HTTP_PORT, () => {
     console.info(`Server available on: http://localhost:${HTTP_PORT}`);
 });
+
+if (fs.existsSync(SSL_KEY_FILE) && fs.existsSync(SSL_CER_FILE))
+    https.createServer({
+        key: fs.readFileSync(SSL_KEY_FILE),
+        cert: fs.readFileSync(SSL_CER_FILE),
+    }, app).listen(HTTPS_PORT, () => {
+        console.info(`Server available on: https://localhost:${HTTPS_PORT}`);
+    });
+else
+    console.error('SSL not available.')
