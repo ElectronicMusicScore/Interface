@@ -21,12 +21,12 @@ const om = ($el) => ca($el, 'is-active');
  * @author Arnau Mora
  * @since 20220407
  * @param {HTMLElement} $el
+ * @param {boolean} force If true, 'data-modal-force' will be ignored.
  */
-const cm = ($el) => {
-    console.log('$el:', $el);
-    if ($el.hasAttribute('data-modal-force'))
+const cm = ($el, force = false) => {
+    if (!force && $el.hasAttribute('data-modal-force'))
         return;
-    cr($el, 'is-active')
+    cr($el, 'is-active');
 };
 
 dell(() => {
