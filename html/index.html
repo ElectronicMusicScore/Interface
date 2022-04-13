@@ -8,6 +8,8 @@
 
     <link href="/node_modules/bulma/css/bulma.min.css" rel="stylesheet" type="text/css"/>
     <link href="main.css" rel="stylesheet" type="text/css"/>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body class="has-navbar-fixed-top">
 
@@ -83,13 +85,16 @@
 
         <div class="navbar-menu" id="navbarMainMenu">
             <a class="navbar-item mt" data-target="flm">Files</a>
-            <a class="navbar-item mt" data-target="wcm">
-                Wi-Fi
-                <span class="tag is-danger is-info is-active" id="wifi-state"
+            <a class="navbar-item" id="bt-conn">
+                <span class="tag is-danger is-info is-active" id="bt-state"
                       style="margin-left: 5px">Disconnected</span>
             </a>
         </div>
         <div class="navbar-end">
+            <div class="navbar-item is-unselectable">
+                <span id="batt-level">0%</span>
+                <span class="material-icons" id="batt-state">battery_unknown</span>
+            </div>
             <div class="navbar-item has-dropdown is-hoverable" id="insments">
                 <a class="navbar-link">
                     Instruments
@@ -123,5 +128,6 @@
 <script src="main.js"></script>
 <script src="modal.js"></script>
 <script src="files-backend.js"></script>
+<script src="bt-backend.js"></script>
 </body>
 </html>
