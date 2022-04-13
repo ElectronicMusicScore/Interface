@@ -156,21 +156,41 @@ dell(() => {
 
                     break;
                 case BluetoothUUID.getCharacteristic(BT_DATA_STORAGE_LIST_UUID):
-                    if (!("TextDecoder" in window))
-                        // TODO: This should be improved
-                        alert("Sorry, this browser does not support TextEncoder...");
+                    const buffer = new Uint8Array(value.buffer);
+                    let filesListRaw = [];
+                    let reachedCR = false;
+                    let hexBuilder = [];
+                    for (let c = 0; c < buffer.length; c++) {
+                        if (reachedCR)
+                            hexBuilder.push(buffer[c] - 32);
+                        else
+                            filesListRaw += buffer[c] !== 0 ? String.fromCharCode(reachedCR ? 32 - buffer[c] : buffer[c]) : '';
 
-                    const enc = new TextDecoder('utf-8');
-                    const filesListRaw = enc.decode(value.buffer)
+                        if (buffer[c] === 10) {
+                            const sizeStr = zeroPad(hexBuilder[3], 2) + zeroPad(hexBuilder[2], 2) + zeroPad(hexBuilder[1], 2) + zeroPad(hexBuilder[0], 2);
+                            filesListRaw += Number('0x' + sizeStr) + '\n';
+                            reachedCR = false;
+                        } else if (buffer[c] === 13) {
+                            reachedCR = true;
+                            hexBuilder = [];
+                        }
+                    }
+                    filesListRaw = filesListRaw
                         .trimEnd()
                         .split('\n');
+
                     let filesList = [];
                     filesListRaw.forEach((i) => {
                         const split = i.splitAt(i.indexOf('\r'));
-                        if (split[0].length > 0)
-                            filesList.push({name: split[0], size: split[1].charCodeAt(0)})
+                        if (split[0].length > 0) {
+                            // console.warn('Size:', split[1]);
+                            filesList.push({name: split[0], size: split[1]})
+                        }
                     });
                     console.log('Files list:', filesList);
+
+                    await loadFiles(filesList);
+
                     break;
                 default:
                     console.log('Char:', char);
