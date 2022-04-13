@@ -24,6 +24,17 @@ const humanFileSize = (size, si = false, dp = 1) => {
     } while (Math.round(Math.abs(size) * r) / r >= thresh && u < units.length - 1);
 
     return size.toFixed(dp) + ' ' + units[u];
+};
+
+/**
+ * Adds leading zeros to {num} until the result string has a length of {places}.
+ * @param {number} num The number to add leading zeros to.
+ * @param {number} places The length that you want the result to have.
+ * @returns {string}
+ */
+const zeroPad = (num, places) => {
+    const zero = places - num.toString().length + 1;
+    return Array(+(zero > 0 && zero)).join("0") + num;
 }
 
 Object.assign(String.prototype, {
