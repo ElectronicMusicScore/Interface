@@ -80,6 +80,7 @@ paths:
                           description: The SSID of the network found.
       operationId: get-nets
       description: Requests the device to search for all the available Wi-Fi networks.
+      deprecated: true
   '/connect/{ssid}':
     parameters:
       - schema:
@@ -139,6 +140,7 @@ paths:
                 value: pass=<password>
       tags:
         - networking
+      deprecated: true
   /upload:
     put:
       summary: File Upload
@@ -341,6 +343,7 @@ paths:
           description: OK
       operationId: get-ping
       description: Used for checking if the server is up and running.
+      deprecated: true
   /file:
     get:
       summary: File request

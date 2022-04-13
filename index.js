@@ -21,7 +21,6 @@ const mime = require('mime-types');
 
 const {faker} = require('@faker-js/faker');
 
-const {generateRandom} = require('./utils');
 const {touch} = require('./fs-utils');
 
 const app = express();
@@ -96,7 +95,6 @@ const initializeFilesList = () => {
 initializeFilesList();
 
 // Emulate the device endpoints
-app.get('/ping', (req, resp) => resp.status(200).send('ok'));
 app.get('/files', (req, resp) => {
     const info = {'used': usedSpace, 'max': availableSpace};
 
@@ -115,46 +113,6 @@ app.get('/file', (req, resp) => {
     const type = mime.lookup(ext);
     const content = fs.readFileSync(filePath);
     resp.status(200).type(type).send(content);
-});
-app.get('/nets', (req, resp) => {
-    let networks = [];
-
-    for (let j = 0; j < generateRandom(15); j++)
-        networks.push({
-            ssid: faker.word.adjective() + ' ' + faker.word.noun(),
-        });
-
-    resp.status(200)
-        .send({"networks": networks});
-});
-app.post('/connect/:ssid', (req, resp) => {
-    const params = req.params;
-    const body = req.body;
-
-    const ssid = params['ssid'];
-    const password = body['pass'];
-    console.log('Should connect to', ssid, 'with', password);
-
-    let result;
-    let status = 200;
-    if (faker.datatype.boolean())
-        result = 'ok';
-    else switch (generateRandom(2)) {
-        case 0:
-            result = 'fail:out-of-range';
-            status = 404;
-            break;
-        case 1:
-            result = 'fail:auth-error';
-            status = 401;
-            break;
-        default:
-            result = 'fail:unknown-error';
-            status = 500;
-            break;
-    }
-    resp.status(status)
-        .send(result);
 });
 app.put('/upload', async (req, resp) => {
     try {
