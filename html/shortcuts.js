@@ -125,6 +125,16 @@ const vs = ($el, v) => $el.value = v;
 const st = ($el, t) => $el.innerText = t;
 
 /**
+ * Shortcut for setting `HTMLElement.innerHTML`.
+ * Warning! This may be used for script injection, use carefully.
+ * @author Arnau Mora
+ * @since 20220407
+ * @param {HTMLElement|Node} $el The element to update.
+ * @param {string} t The new innerHTML.
+ */
+const sh = ($el, t) => $el.innerHTML = t;
+
+/**
  * Shortcut for getting `HTMLElement.innerText`.
  * @author Arnau Mora
  * @since 20220409
