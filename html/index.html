@@ -21,57 +21,6 @@
     </div>
 </div>
 
-<!-- Wifi connection modal -->
-<div class="modal is-active" id="wcm">
-    <div class="modal-background"></div>
-    <div class="modal-content">
-        <form class="box" id="ssid-form">
-            <fieldset id="ssid-ffs">
-                <h1 class="title">Connect to a Wi-Fi network</h1>
-                <p class="subtitle is-6">
-                    Use this wizard to connect to a custom Wi-Fi network, for updating the Firmware, or other
-                    internet-dependent functions.
-                </p>
-
-                <fieldset id="ssid-fs">
-                    <label class="label">SSID</label>
-                    <div class="field has-addons">
-                        <div class="control is-expanded">
-                            <div class="select is-fullwidth" id="ssid-sel">
-                                <!--suppress HtmlFormInputWithoutLabel -->
-                                <select id="ssid-val" name="ssid" required>
-                                    <option disabled hidden selected value="">Choose SSID</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="control">
-                            <button class="button is-primary" id="ssid-src" type="button">
-                                Search
-                            </button>
-                        </div>
-                        <p class="help is-danger is-hidden" id="ssid-err">Could not find Wi-Fi networks.</p>
-                    </div>
-                </fieldset>
-                <progress class="progress is-small is-hidden" id="ssid-prog" max="100"
-                          style="margin-top: 5px"></progress>
-
-                <div class="field" style="margin-top: 10px">
-                    <label class="label">Password</label>
-                    <div class="control">
-                        <!--suppress HtmlFormInputWithoutLabel -->
-                        <input class="input" id="ssid-pass" placeholder="Password" type="password">
-                    </div>
-                </div>
-
-                <button class="button is-fullwidth" id="ssid-conn" type="submit">Connect</button>
-
-                <span class="has-text-danger is-hidden" id="ssid-error"></span>
-            </fieldset>
-        </form>
-    </div>
-    <button aria-label="close" class="modal-close is-large"></button>
-</div>
-
 <!-- Files list modal -->
 <div class="modal is-active" id="flm">
     <div class="modal-background"></div>
