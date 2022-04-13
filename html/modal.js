@@ -8,20 +8,20 @@
  */
 
 /**
- * An event that gets called whenever a modal gets opened through `om`.
+ * The event name which gets called whenever a modal gets opened through `om`.
  * @author Arnau Mora
  * @since 20220413
- * @type {Event}
+ * @type {string}
  */
-const modalOpenEvent = new Event('modal_open', {cancelable: true});
+const modalOpenEventName = 'modal_open';
 
 /**
- * An event that gets called whenever a modal gets closed through `cm`.
+ * The event name which gets called whenever a modal gets closed through `cm`.
  * @author Arnau Mora
  * @since 20220413
- * @type {Event}
+ * @type {string}
  */
-const modalCloseEvent = new Event('modal_close', {cancelable: true});
+const modalCloseEventName = 'modal_close';
 
 // Functions to open and close a modal
 /**
@@ -31,8 +31,9 @@ const modalCloseEvent = new Event('modal_close', {cancelable: true});
  * @param {HTMLElement} $el
  */
 const om = ($el) => {
-    if ($el.dispatchEvent(modalOpenEvent))
+    if ($el.dispatchEvent(new Event(modalOpenEventName, {cancelable: true})))
         ca($el, 'is-active');
+    else console.log('Modal opening has been prevented.');
 };
 
 /**
@@ -45,8 +46,9 @@ const om = ($el) => {
 const cm = ($el, force = false) => {
     if (!force && $el.hasAttribute('data-modal-force'))
         return;
-    if ($el.dispatchEvent(modalCloseEvent))
+    if ($el.dispatchEvent(new Event(modalCloseEventName, {cancelable: true})))
         cr($el, 'is-active');
+    else console.log('Modal closing has been prevented.');
 };
 
 dell(() => {
