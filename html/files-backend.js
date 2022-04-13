@@ -1,4 +1,13 @@
-dell(async () => {
+/**
+ * Loads all the files from the list, and updates the GUI accordingly.
+ * @author Arnau Mora
+ * @since 20220414
+ * @param {{name:string,size:number}[]} files
+ * @returns {Promise<void>}
+ */
+const loadFiles = async (files) => {
+    console.log('Loading files...');
+
     /**
      * The div that contains the cards that list all the files in the server.
      * @type {HTMLElement}
@@ -9,11 +18,85 @@ dell(async () => {
      * @type {HTMLElement}
      */
     const filesCard = _('files-card');
-    /**
-     * The progress bar that shows the filesystem usage percent.
-     * @type {HTMLProgressElement}
-     */
-    const filesUsage = _('files-spc');
+
+    filesList.innerHTML = '';
+    for (const f in files) {
+        const file = files[f];
+        const filename = file.name;
+        const size = file.size;
+
+        const name = filename.split('/').last();
+        const ext = name.split('.').last();
+        const nameNoExt = name.substring(0, name.indexOf(ext) - 1);
+
+        const card = filesCard.cloneNode(true);
+        card.id = name.replace('.', '_');
+        cr(card, 'is-hidden');
+        qsa('[data-source="filename"]', card).forEach((i) => {
+            st(i, nameNoExt);
+            // This gets called whenever the name of a file is changed.
+            el(i, 'focusout', async () => {
+                const t = `${gt(i)}.${ext}`;
+                if (t === filename)
+                    return;
+
+                const url = new URL('/rename', window.location.origin);
+                const rename = await fetch(url.toString(), {
+                    method: 'PATCH',
+                    body: new URLSearchParams({FROM: filename, TO: t}),
+                });
+                if (rename.ok)
+                    await loadFiles();
+                else
+                    console.error('Could not rename file. Code:', rename.status);
+            });
+        });
+        qsa('[data-source="size"]', card).forEach((i) => st(i, humanFileSize(size)));
+        qsa('[data-source="load"]', card).forEach((i) => {
+            elc(i, (ev) => {
+                ec(ev);
+                loadSheet(filename);
+                cm(_('flm'));
+            });
+            if (!filename.endsWithAny('xml', 'mxl', 'musicxml'))
+                // Hide button if not a MusicXML file
+                ca(i, 'is-hidden');
+        });
+        qsa('[data-source="delete"]', card).forEach((i) => {
+            elc(i, async (ev) => {
+                ec(ev);
+                if (i.classList.contains('has-text-danger')) {
+                    const url = new URL('/' + encodeURIComponent(filename), window.location.origin);
+                    const deletion = await fetch(url.toString(), {method: 'DELETE'});
+                    if (!deletion.ok)
+                        // TODO: Show error in GUI
+                        console.error('Could not delete. Status:', deletion.status);
+                    else {
+                        console.log('File deleted!');
+                        await loadFiles();
+                    }
+                } else {
+                    ca(i, 'has-text-danger');
+                    st(i, 'Confirm');
+                }
+            });
+            el(i, 'focusout', () => {
+                cr(i, 'has-text-danger');
+                st(i, 'Delete');
+            });
+        });
+
+        filesList.appendChild(card);
+    }
+    console.log("Finished loading", files.length, "files");
+
+    if (localStorage.hasOwnProperty('sheet'))
+        loadSheet(localStorage.getItem('sheet'));
+    else if (files.length > 0)
+        loadSheet(files[0].name);
+}
+
+dell(async () => {
     /**
      * The file input for uploading new files to the filesystem.
      * @type {HTMLInputElement}
@@ -32,109 +115,6 @@ dell(async () => {
 
     // Set initial state for modal
     cr(_('flm'), 'is-active');
-
-    const loadFiles = async () => {
-        console.log('Loading files...');
-
-        const fList = await fetch('/files');
-        if (!fList.ok)
-            // TODO: Display error in UI
-            return console.error(fList.error());
-        const json = await fList.json();
-        /**
-         * The list of files in server. Contains the full path of the file, starting with "/"
-         * @type {{path:string,size:number}[]}
-         */
-        const files = json.files;
-        /**
-         * Provides information about the state of the filesystem.
-         * @type {{used:number,max:number}}
-         */
-        const info = json.info;
-        const used = (info.used / info.max) * 100;
-
-        st(_('files-used'), humanFileSize(info.used));
-        st(_('files-avail'), humanFileSize(info.max));
-        vs(filesUsage, used);
-        cr(filesUsage, 'is-info', 'is-success', 'is-warning', 'is-danger');
-        ca(filesUsage, used < 30 ? 'is-info' : used < 50 ? 'is-success' : used < 80 ? 'is-warning' : 'is-danger');
-
-        filesList.innerHTML = '';
-        for (const f in files) {
-            const file = files[f];
-            const filename = file.path;
-            const size = file.size;
-
-            const name = filename.split('/').last();
-            const ext = name.split('.').last();
-            const nameNoExt = name.substring(0, name.indexOf(ext) - 1);
-
-            const card = filesCard.cloneNode(true);
-            card.id = name.replace('.', '_');
-            cr(card, 'is-hidden');
-            qsa('[data-source="filename"]', card).forEach((i) => {
-                st(i, nameNoExt);
-                // This gets called whenever the name of a file is changed.
-                el(i, 'focusout', async () => {
-                    const t = `${gt(i)}.${ext}`;
-                    if (t === filename)
-                        return;
-
-                    const url = new URL('/rename', window.location.origin);
-                    const rename = await fetch(url.toString(), {
-                        method: 'PATCH',
-                        body: new URLSearchParams({FROM: filename, TO: t}),
-                    });
-                    if (rename.ok)
-                        await loadFiles();
-                    else
-                        console.error('Could not rename file. Code:', rename.status);
-                });
-            });
-            qsa('[data-source="size"]', card).forEach((i) => st(i, humanFileSize(size)));
-            qsa('[data-source="load"]', card).forEach((i) => {
-                elc(i, (ev) => {
-                    ec(ev);
-                    loadSheet(filename);
-                    cm(_('flm'));
-                });
-                if (!filename.endsWithAny('xml', 'mxl', 'musicxml'))
-                    // Hide button if not a MusicXML file
-                    ca(i, 'is-hidden');
-            });
-            qsa('[data-source="delete"]', card).forEach((i) => {
-                elc(i, async (ev) => {
-                    ec(ev);
-                    if (i.classList.contains('has-text-danger')) {
-                        const url = new URL('/' + encodeURIComponent(filename), window.location.origin);
-                        const deletion = await fetch(url.toString(), {method: 'DELETE'});
-                        if (!deletion.ok)
-                            // TODO: Show error in GUI
-                            console.error('Could not delete. Status:', deletion.status);
-                        else {
-                            console.log('File deleted!');
-                            await loadFiles();
-                        }
-                    } else {
-                        ca(i, 'has-text-danger');
-                        st(i, 'Confirm');
-                    }
-                });
-                el(i, 'focusout', () => {
-                    cr(i, 'has-text-danger');
-                    st(i, 'Delete');
-                });
-            });
-
-            filesList.appendChild(card);
-        }
-        console.log("Finished loading", files.length, "files");
-
-        if (localStorage.hasOwnProperty('sheet'))
-            loadSheet(localStorage.getItem('sheet'));
-        else if (files.length > 0)
-            loadSheet(files[0].path);
-    }
 
     el(filesInput, 'change', (ev) => {
         ec(ev); // Consume event
@@ -170,7 +150,7 @@ dell(async () => {
                 ca(filesUpload, 'is-hidden');
                 ca(filesName, 'is-hidden');
                 $tg.file = null;
-                await loadFiles();
+                // TODO: Files should be fetched again
             } else
                 console.error('Could not upload file. Status:', xhr.status);
         });
@@ -179,6 +159,4 @@ dell(async () => {
         xhr.overrideMimeType(file.type);
         xhr.send(formData);
     });
-
-    await loadFiles();
 });
