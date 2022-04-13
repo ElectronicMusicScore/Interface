@@ -11,9 +11,14 @@
 </head>
 <body class="has-navbar-fixed-top">
 
-<!-- Server down notification -->
-<div class="notification is-danger is-hidden" id="sdn">
-    Server disconnected. Please, check your connection.
+<!-- Device incompatible modal -->
+<div class="modal is-active" data-modal-force id="dim">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="box">
+            Your device is not compatible
+        </div>
+    </div>
 </div>
 
 <!-- Wifi connection modal -->
