@@ -1,0 +1,38 @@
+{
+  "name": "Electronic Music Score",
+  "short_name": "EMS",
+  "start_url": "/",
+  "description": "The official app for the Electronic Music Score device.",
+  "dir": "ltr",
+  "display": "standalone",
+  "lang": "en-US",
+  "orientation": "portrait",
+  "theme_color": "aliceblue",
+  "background_color": "white",
+  "categories": [
+    "utilities",
+    "music"
+  ],
+  "icons": [
+    {
+      "src": "favicon/favicon_18dp.png",
+      "sizes": "36x36"
+    },
+    {
+      "src": "favicon/favicon_24dp.png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "favicon/favicon_36dp.png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "favicon/favicon_48dp.png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "favicon/favicon_48dp.svg",
+      "sizes": "any"
+    }
+  ]
+}
