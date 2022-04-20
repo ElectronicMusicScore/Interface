@@ -6,6 +6,8 @@
  */
 let btServer;
 
+let spaceUsed, spaceAvailable;
+
 /**
  * Determines the current connection state of the Bluetooth service.
  * @author Arnau Mora
@@ -110,12 +112,27 @@ dell(() => {
         }
     };
 
-    const bin2String = (array) => {
-        let result = "";
-        for (let i = 0; i < array.length; i++)
-            result += String.fromCharCode(parseInt(array[i], 2));
-        return result;
-    }
+    const updateSpace = () => {
+        if (spaceAvailable != null) {
+            const filesAvailable = _('files-avail');
+
+            st(filesAvailable, humanFileSize(spaceAvailable));
+        }
+
+        if (spaceUsed != null) {
+            const filesUsed = _('files-used');
+            const filesUsage = _('files-spc');
+
+            st(filesUsed, humanFileSize(spaceUsed));
+
+            if (spaceAvailable != null && spaceUsed != null) {
+                const usedPercent = spaceUsed / spaceAvailable;
+                vs(filesUsage, usedPercent * 100);
+                cr(filesUsage, 'is-info', 'is-success', 'is-warning', 'is-danger');
+                ca(filesUsage, usedPercent < .3 ? 'is-info' : usedPercent < .5 ? 'is-success' : usedPercent < .8 ? 'is-warning' : 'is-danger');
+            }
+        }
+    };
 
     const updateUsedSpace = async () => {
         if (btServer == null) {
@@ -138,22 +155,14 @@ dell(() => {
 
             switch (char.uuid) {
                 case BluetoothUUID.getCharacteristic(BT_DATA_STORAGE_AVAILABLE_UUID):
-                    const spaceAvailable = new DataView(value.buffer, value.byteOffset).getUint32(0, true);
+                    spaceAvailable = new DataView(value.buffer, value.byteOffset).getUint32(0, true);
                     console.log('Space available:', spaceAvailable);
-                    st(_('files-avail'), humanFileSize(spaceAvailable));
+                    updateSpace()
                     break;
                 case BluetoothUUID.getCharacteristic(BT_DAT_STORAGE_USED_UUID):
-                    const spaceUsed = new DataView(value.buffer, value.byteOffset).getUint32(0, true);
+                    spaceUsed = new DataView(value.buffer, value.byteOffset).getUint32(0, true);
                     console.log('Space used:', spaceUsed);
-
-                    const filesUsed = _('files-used');
-                    const filesUsage = _('files-spc');
-
-                    st(filesUsed, humanFileSize(spaceUsed));
-                    vs(filesUsage, spaceUsed);
-                    cr(filesUsage, 'is-info', 'is-success', 'is-warning', 'is-danger');
-                    ca(filesUsage, spaceUsed < 30 ? 'is-info' : spaceUsed < 50 ? 'is-success' : spaceUsed < 80 ? 'is-warning' : 'is-danger');
-
+                    updateSpace()
                     break;
                 case BluetoothUUID.getCharacteristic(BT_DATA_STORAGE_LIST_UUID):
                     const buffer = new Uint8Array(value.buffer);
