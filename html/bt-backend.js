@@ -55,13 +55,15 @@ const BT_SERVICE_BATT = 0x180F;
 const BT_SERVICE_INFO = 0x180A;
 
 /**
- * The UUID of the characteristic that tells whether the device supports file transferring.
+ * The UUID of the characteristic that tells whether some functions are compatible or not. The bits used for checking
+ * based on its index are:
+ * * `1`: File transfer compatibility
  * @author Arnau Mora
  * @since 20220421
  * @type {string}
  * @see {BT_SERVICE_INFO}
  */
-const BT_INFO_FILE_TRANSFER_COMPATIBLE = 'e978c8fd-bb34-6bb1-ca49-2565696b18b1';
+const BT_INFO_COMPATIBILITY_TABLE = 'e978c8fd-bb34-6bb1-ca49-2565696b18b1';
 
 /**
  * The UUID of the available storage characteristic.
@@ -335,9 +337,10 @@ dell(() => {
                     console.log('value:', value);
 
                     switch (char.uuid) {
-                        case BT_INFO_FILE_TRANSFER_COMPATIBLE:
-                            const ftCompatibleView = new DataView(value.buffer, value.byteOffset);
-                            ftCompatible = ftCompatibleView.getUint8(0) !== 0;
+                        case BT_INFO_COMPATIBILITY_TABLE:
+                            const compTableView = new DataView(value.buffer, value.byteOffset);
+                            const compTable = compTableView.getUint8(0);
+                            ftCompatible = isBitOn(compTable, 0);
 
                             console.log('File transfer compatible:', ftCompatible);
 
