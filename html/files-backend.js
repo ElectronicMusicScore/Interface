@@ -18,6 +18,13 @@ const loadFiles = async (files) => {
      * @type {HTMLElement}
      */
     const filesCard = _('files-card');
+    /**
+     * The field used for upload files.
+     * @type {HTMLElement}
+     */
+    const fileUploadField = _('file-upload-field');
+
+    cs(fileUploadField, 'is-hidden', ftCompatible);
 
     filesList.innerHTML = '';
     for (const f in files) {
