@@ -17,6 +17,27 @@
 </head>
 <body class="has-navbar-fixed-top">
 
+<!-- Device info modal -->
+<div class="modal" id="difm">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="box">
+            <h1 class="title">Device info</h1>
+            <ol>
+                <li>Model name: <b id="mnf">undefined</b></li>
+                <li>Firmware version: <b id="fvf">undefined</b></li>
+                <li>Manufacturer name: <b id="mfnf">undefined</b></li>
+            </ol>
+            <br/>
+
+            <h1 class="title">Compatibility</h1>
+            <ol>
+                <li>File transfer compatible: <b id="ftc">undefined</b></li>
+            </ol>
+        </div>
+    </div>
+</div>
+
 <!-- Device incompatible modal -->
 <div class="modal is-active" data-modal-force id="dim">
     <div class="modal-background"></div>
@@ -97,6 +118,9 @@
                 <span id="batt-level">0%</span>
                 <span class="material-icons" id="batt-state">battery_unknown</span>
             </div>
+            <a class="navbar-item mt is-hidden" data-target="difm" id="dibi">
+                <span class="material-icons">tablet</span>
+            </a>
             <div class="navbar-item has-dropdown is-hoverable is-hidden" id="insments">
                 <a class="navbar-link">
                     Instruments

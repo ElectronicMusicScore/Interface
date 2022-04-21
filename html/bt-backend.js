@@ -8,6 +8,8 @@ let btServer;
 
 let spaceUsed, spaceAvailable;
 
+let deviceModel, deviceRevision, deviceManufacturer;
+
 /**
  * Stores if the currently connected device supports file transferring.
  * @author Arnau Mora
@@ -53,6 +55,30 @@ const BT_SERVICE_BATT = 0x180F;
  * @type {number}
  */
 const BT_SERVICE_INFO = 0x180A;
+
+/**
+ * The UUID of the characteristic that shows the model of the device.
+ * @author Arnau Mora
+ * @since 20220421
+ * @type {number}
+ */
+const BT_INFO_MODEL = 0x2A24;
+
+/**
+ * The UUID of the characteristic that shows the revision of the firmware installed of the device.
+ * @author Arnau Mora
+ * @since 20220421
+ * @type {number}
+ */
+const BT_INFO_REVISION = 0x2A26;
+
+/**
+ * The UUID of the characteristic that shows the manufacturer name of the device.
+ * @author Arnau Mora
+ * @since 20220421
+ * @type {number}
+ */
+const BT_INFO_MANUFACTURER = 0x2A29;
 
 /**
  * The UUID of the characteristic that tells whether some functions are compatible or not. The bits used for checking
@@ -111,6 +137,7 @@ dell(() => {
     const setBtState = (state) => {
         const $el = _('bt-state');
         const $crd = _('nc-card');
+        const $dinfo = _('dibi');
         cr($el, 'is-info', 'is-danger', 'is-success');
         st(
             $el,
@@ -119,6 +146,7 @@ dell(() => {
         ca($el, state === 0 ? 'is-danger' : state === 1 ? 'is-info' : 'is-success');
 
         cs($crd, 'is-hidden', state === btState.DISCONNECTED);
+        cs($dinfo, 'is-hidden', state === btState.CONNECTED);
     };
 
     /**
@@ -334,22 +362,49 @@ dell(() => {
                      * @type {{buffer:ArrayBuffer,byteOffset:number}|null}
                      */
                     let value = char.properties.read ? await char.readValue() : null;
-                    console.log('value:', value);
+                    const buffer = new Uint8Array(value.buffer);
+                    const dataView = new DataView(value.buffer, value.byteOffset);
+                    const dataValue = dataView.getUint8(0);
+
+                    let str = '';
+                    buffer.forEach((i) => str += String.fromCharCode(i));
 
                     switch (char.uuid) {
                         case BT_INFO_COMPATIBILITY_TABLE:
-                            const compTableView = new DataView(value.buffer, value.byteOffset);
-                            const compTable = compTableView.getUint8(0);
-                            ftCompatible = isBitOn(compTable, 7); // 1XXXXXXX determines file transfer compatible
+                            ftCompatible = isBitOn(dataValue, 7); // 1XXXXXXX determines file transfer compatible
 
                             console.log('File transfer compatible:', ftCompatible);
 
                             break;
+                        case BluetoothUUID.getCharacteristic(BT_INFO_MODEL):
+                            deviceModel = str;
+
+                            break;
+                        case BluetoothUUID.getCharacteristic(BT_INFO_REVISION):
+                            deviceRevision = buffer[0] + '.' + buffer[1] + '.' + buffer[2] + (buffer[3] === 1 ? '-dev' : '');
+
+                            break;
+                        case BluetoothUUID.getCharacteristic(BT_INFO_MANUFACTURER):
+                            deviceManufacturer = str;
+
+                            break;
                         default:
                             console.log('Device info char:', char);
+                            console.log('value:', value);
                             break;
                     }
                 }
+
+                console.log(
+                    'Model:', deviceModel + '\n' +
+                    'Revision:', deviceRevision + '\n' +
+                    'Manufacturer:', deviceManufacturer
+                );
+
+                st(_('mnf'), deviceModel);
+                st(_('fvf'), deviceRevision);
+                st(_('mfnf'), deviceManufacturer);
+                st(_('ftc'), ftCompatible ? 'true' : 'false');
             } else {
                 console.error('There was an error while connecting.');
                 snackbar('Could not connect. More info in the console.');
