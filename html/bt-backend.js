@@ -216,6 +216,12 @@ dell(() => {
         }
     });
 
+    elc(_('bt-card-conn'), (ev) => {
+        ev.preventDefault();
+
+        _('bt-state').click();
+    });
+
     // Check bluetooth compatibility
     try {
         navigator.bluetooth
