@@ -83,12 +83,15 @@ dell(() => {
      */
     const setBtState = (state) => {
         const $el = _('bt-state');
+        const $crd = _('nc-card');
         cr($el, 'is-info', 'is-danger', 'is-success');
         st(
             $el,
             state === 0 ? 'Disconnected' : state === 1 ? 'Connecting' : 'Connected'
         );
         ca($el, state === 0 ? 'is-danger' : state === 1 ? 'is-info' : 'is-success');
+
+        cs($crd, 'is-hidden', state === btState.DISCONNECTED);
     };
 
     /**
