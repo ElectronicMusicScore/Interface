@@ -27,13 +27,12 @@ const loadFiles = async (files) => {
 
         const name = filename.split('/').last();
         const ext = name.split('.').last();
-        const nameNoExt = name.substring(0, name.indexOf(ext) - 1);
 
         const card = filesCard.cloneNode(true);
         card.id = name.replace('.', '_');
         cr(card, 'is-hidden');
         qsa('[data-source="filename"]', card).forEach((i) => {
-            st(i, nameNoExt);
+            st(i, name);
             // This gets called whenever the name of a file is changed.
             el(i, 'focusout', async () => {
                 const t = `${gt(i)}.${ext}`;
