@@ -37,6 +37,19 @@ const zeroPad = (num, places) => {
     return Array(+(zero > 0 && zero)).join("0") + num;
 }
 
+/**
+ * Checks if the bit of {number} is a `1` at {index}.
+ * @author Arnau Mora
+ * @since 20220421
+ * @param {number} number The number to check.
+ * @param {number} index The index of the digit to check.
+ * @returns {boolean} `true` if the digit is `1`, false otherwise.
+ */
+const isBitOn = (number, index) => {
+    let binary = number.toString(2);
+    return (binary[(binary.length - 1) - index] === "1"); // index backwards
+}
+
 Object.assign(String.prototype, {
     /**
      * Checks whether the string ends with any of the suffixes.
