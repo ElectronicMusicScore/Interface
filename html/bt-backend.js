@@ -9,6 +9,14 @@ let btServer;
 let spaceUsed, spaceAvailable;
 
 /**
+ * Stores if the currently connected device supports file transferring.
+ * @author Arnau Mora
+ * @since 20220421
+ * @type {boolean}
+ */
+let ftCompatible;
+
+/**
  * Determines the current connection state of the Bluetooth service.
  * @author Arnau Mora
  * @since 22020413
@@ -37,6 +45,23 @@ const BT_SERVICE_DATA = 0x181C;
  * @type {number}
  */
 const BT_SERVICE_BATT = 0x180F;
+
+/**
+ * The GATT service for requesting system info.
+ * @author Arnau Mora
+ * @since 20220421
+ * @type {number}
+ */
+const BT_SERVICE_INFO = 0x180A;
+
+/**
+ * The UUID of the characteristic that tells whether the device supports file transferring.
+ * @author Arnau Mora
+ * @since 20220421
+ * @type {string}
+ * @see {BT_SERVICE_INFO}
+ */
+const BT_INFO_FILE_TRANSFER_COMPATIBLE = 'e978c8fd-bb34-6bb1-ca49-2565696b18b1';
 
 /**
  * The UUID of the available storage characteristic.
@@ -264,7 +289,7 @@ dell(() => {
             const device = await navigator.bluetooth
                 .requestDevice({
                     filters: [
-                        {services: [BT_SERVICE_DATA, BT_SERVICE_BATT]},
+                        {services: [BT_SERVICE_DATA, BT_SERVICE_BATT, BT_SERVICE_INFO]},
                         {namePrefix: 'EMS_PROTO'}
                     ],
                 });
@@ -296,6 +321,29 @@ dell(() => {
                             break;
                         default:
                             console.log('Battery char:', char);
+                            break;
+                    }
+                }
+
+                const infoService = await server.getPrimaryService(BT_SERVICE_INFO);
+                const infoChars = await infoService.getCharacteristics();
+                for (const char of infoChars) {
+                    /**
+                     * @type {{buffer:ArrayBuffer,byteOffset:number}|null}
+                     */
+                    let value = char.properties.read ? await char.readValue() : null;
+                    console.log('value:', value);
+
+                    switch (char.uuid) {
+                        case BT_INFO_FILE_TRANSFER_COMPATIBLE:
+                            const ftCompatibleView = new DataView(value.buffer, value.byteOffset);
+                            ftCompatible = ftCompatibleView.getUint8(0) !== 0;
+
+                            console.log('File transfer compatible:', ftCompatible);
+
+                            break;
+                        default:
+                            console.log('Device info char:', char);
                             break;
                     }
                 }
