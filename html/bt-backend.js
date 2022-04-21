@@ -340,7 +340,7 @@ dell(() => {
                         case BT_INFO_COMPATIBILITY_TABLE:
                             const compTableView = new DataView(value.buffer, value.byteOffset);
                             const compTable = compTableView.getUint8(0);
-                            ftCompatible = isBitOn(compTable, 0);
+                            ftCompatible = isBitOn(compTable, 7); // 1XXXXXXX determines file transfer compatible
 
                             console.log('File transfer compatible:', ftCompatible);
 
