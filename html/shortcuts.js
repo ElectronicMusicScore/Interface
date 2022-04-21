@@ -70,6 +70,16 @@ const cr = ($el, ...cn) => cn.forEach((cl) => $el.classList.remove(cl));
 const ct = ($el, ...cn) => cn.forEach((cl) => $el.classList.toggle(cl));
 
 /**
+ * Adds or removes a class to `$el` depending on `st`.
+ * @author Arnau Mora
+ * @since 20220421
+ * @param {HTMLElement|Node} $el The element to actuate on.
+ * @param {string} cn The classname to toggle.
+ * @param {boolean} st If true, the class will be added, if false, it will be removed.
+ */
+const cs = ($el, cn, st) => (st ? cr : ca)($el, cn);
+
+/**
  * Shortcut for `DOMElement.setAttribute`.
  * @author Arnau Mora
  * @since 20220407
